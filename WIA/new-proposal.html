@@ -8,11 +8,61 @@
     <link rel="stylesheet" href="css/proposal-list.css">
     <link rel="stylesheet" href="css/new-proposal.css">
     <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
             <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="agent-registration.html">Register an Agent</a>
+                    <a href="customer-update.html">Customer Update</a>
+                </div>
+            </div>
         </div>
         <div class="header-right">
             <div class="user-menu">
@@ -45,8 +95,37 @@
                         <input type="text" id="proposalCode" name="proposalCode" value="MILESTONE-PC-005" disabled>
                     </div>
                 </div>
-                
-                <!-- Row 2: Code, Transaction Type, Vehicle Type -->
+                <!-- Row 2: Name Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerId">Customer ID</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="customerId" name="customerId" placeholder="Enter customer ID">
+                            <button type="button" id="customerSearchBtn" class="btn-action" style="padding: 4px 10px; height: 32px; margin-top: 1px;">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="Michael" required>
+                    </div>
+                    
+                    <div class="form-group" style="max-width: 80px;">
+                        <label for="middleInitial">M.I.</label>
+                        <input type="text" id="middleInitial" name="middleInitial" value="J" maxlength="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" value="Anderson" required>
+                    </div>
+                    
+                    <div class="form-group" style="max-width: 100px;">
+                        <label for="extName">Ext. Name</label>
+                        <input type="text" id="extName" name="extName" value="Jr." maxlength="5">
+                    </div>
+                </div>
+                <!-- Row 3: Code, Transaction Type, Vehicle Type -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="transactionType">Transaction Type</label>
@@ -88,30 +167,6 @@
                         <input type="text" id="agentCode" name="agentCode" value="AG-001" disabled>
                     </div>
                 </div>
-                
-                <!-- Row 3: Name Information -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" value="Michael" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="middleInitial">Middle Initial</label>
-                        <input type="text" id="middleInitial" name="middleInitial" value="J">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" value="Anderson" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="extName">Ext. Name</label>
-                        <input type="text" id="extName" name="extName" value="Jr.">
-                    </div>
-                </div>
-                
                 <!-- Row 4: Address -->
                 <div class="form-row">
                     <div class="form-group wide">
@@ -160,8 +215,8 @@
                                     <th colspan="3">Previous Policy</th>
                                 </tr>
                                 <tr>
-                                    <th>Current Market Value</th>
-                                    <th>Premim</th>
+                                    <th>Current Market Value (2024)</th>
+                                    <th>Premium</th>
                                     <th>%</th>
                                 </tr>
                             </thead>
@@ -208,7 +263,7 @@
                 
                 <!-- Add Coverage Table -->
                 <div class="form-row">
-                    <div class="form-group full-width">
+                    <div class="form-group" style="width: 50%;">
                         <table class="coverage-table">
                             <thead>
                                 <tr>
@@ -279,6 +334,136 @@
                                     <td style="text-align: center; font-weight: bold;">Total Premium including taxes</td>
                                     <td></td>
                                     <td class="disable-cell"><span id="totalPremium" class="premium-total">19,361.22</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Add Remittance Table -->
+                    <div class="form-group" style="width: 50%;">
+                        <table class="remittance-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">% Prem</th>
+                                    <th>Previous Policy</th>
+                                    <th colspan="2" class="yellow-bg">Remittance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="red-text">1.00%</td>
+                                    <td></td>
+                                    <td class="right-align">14,116.50</td>
+                                    <td class="right-align">0.80%</td>
+                                    <td class="right-align">7,902.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="red-text">0.33%</td>
+                                    <td></td>
+                                    <td class="right-align">0.00</td>
+                                    <td class="right-align">0.30%</td>
+                                    <td class="right-align">2,963.25</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"></td>
+                                    <td></td>
+                                    <td class="right-align">510.00</td>
+                                    <td class="red-text">BI/PD/PA</td>
+                                    <td class="right-align">2,080.00</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="right-align">1,320.00</td>
+                                    <td class="blue-text">Basic Total</td>
+                                    <td class="right-align blue-text">12,945.25</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="right-align">0.00</td>
+                                    <td class="right-align">24.61%</td>
+                                    <td class="right-align">3,185.83</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text">Basic Total</td>
+                                    <td></td>
+                                    <td class="right-align">15,946.50</td>
+                                    <td class="right-align">Less Com</td>
+                                    <td class="right-align">561.60</td>
+                                </tr>
+                                <tr>
+                                    <td>Taxes</td>
+                                    <td></td>
+                                    <td class="right-align">3,924.43</td>
+                                    <td class="right-align">RSA</td>
+                                    <td class="right-align">150.00</td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="bold-text">Total Prem</td>
+                                    <td></td>
+                                    <td class="right-align bold-text">19,870.93</td>
+                                    <td class="yellow-bg bold-text">Total Remittance</td>
+                                    <td class="right-align yellow-bg bold-text">15,719.48</td>
+                                </tr>
+                                <tr>
+                                    <td class="red-text">BI/PD/PA</td>
+                                    <td></td>
+                                    <td class="right-align">2,080.00</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Gross Profit</td>
+                                </tr>
+                                <tr>
+                                    <td>30%</td>
+                                    <td class="yellow-marker">→</td>
+                                    <td class="right-align">624.00</td>
+                                    <td colspan="2" class="center-text gray-bg">3,441.74</td>
+                                </tr>
+                                <tr>
+                                    <td>10%</td>
+                                    <td class="yellow-marker">→</td>
+                                    <td class="right-align">62.40</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Agent</td>
+                                </tr>
+                                <tr>
+                                    <td>Net com</td>
+                                    <td></td>
+                                    <td class="right-align">561.60</td>
+                                    <td colspan="2" class="center-text">IH</td>
+                                </tr>
+                                <tr class="yellow-bg">
+                                    <td class="bold-text">Total Premium :</td>
+                                    <td></td>
+                                    <td class="right-align bold-text">19,361.22</td>
+                                    <td>Net Com</td>
+                                    <td class="right-align">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="center-text bold-text">Payment Terms</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Net Profit</td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">6 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱3,226.87</td>
+                                    <td colspan="2" class="center-text gray-bg">3,441.74</td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">5 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱3,872.24</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">4 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱4,840.30</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">3 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱6,453.74</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">2 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱9,680.61</td>
+                                    <td colspan="2"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -420,6 +605,58 @@
                         background-color: #f0f0f0;
                         color: #333;
                     }
+                    /* New remittance table styles */
+                    .remittance-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                    }
+                    .remittance-table th, .remittance-table td {
+                        border: 1px solid black;
+                        padding: 4px 8px;
+                    }
+                    .remittance-table th {
+                        background-color: white;
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                    .right-align {
+                        text-align: right;
+                    }
+                    .center-text {
+                        text-align: center;
+                    }
+                    .red-text {
+                        color: red;
+                        font-weight: bold;
+                    }
+                    .blue-text {
+                        color: blue;
+                        font-weight: bold;
+                    }
+                    .bold-text {
+                        font-weight: bold;
+                    }
+                    .yellow-bg {
+                        background-color: yellow;
+                    }
+                    .black-bg {
+                        background-color: black;
+                    }
+                    .gray-bg {
+                        background-color: #e0e0e0;
+                    }
+                    .white-text {
+                        color: white;
+                    }
+                    .yellow-marker {
+                        color: orange;
+                        font-weight: bold;
+                    }
+                    .border-bottom {
+                        border-bottom: 2px solid black;
+                    }
                 </style>
                 
                 <!-- Form Action Buttons -->
@@ -439,6 +676,92 @@
         <div class="popup-content">
             <span class="popup-close">&times;</span>
             <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Customer Search Popup -->
+    <div id="customerSearchPopup" class="popup-overlay">
+        <div class="popup-content" style="width: 70%; height: 70%;">
+            <span class="popup-close" id="closeCustomerSearch">&times;</span>
+            <div style="padding: 20px;">
+                <h2>Customer Search</h2>
+                
+                <div class="search-filters" style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                        <label>
+                            <input type="radio" name="searchType" value="customerId" checked> Customer ID
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="firstName"> First Name
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="lastName"> Last Name
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="agentName"> Agent Name
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="searchKeyword" style="flex: 1; padding: 8px;" placeholder="Enter search keyword">
+                        <button type="button" class="btn-action btn-primary" style="padding: 8px 15px;">Search</button>
+                    </div>
+                </div>
+                
+                <div class="search-results" style="margin-top: 20px; max-height: 300px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #009879; color: white;">
+                                <th style="padding: 12px 15px; text-align: center;">Select</th>
+                                <th style="padding: 12px 15px;">Customer ID</th>
+                                <th style="padding: 12px 15px;">First Name</th>
+                                <th style="padding: 12px 15px;">Middle Initial</th>
+                                <th style="padding: 12px 15px;">Last Name</th>
+                                <th style="padding: 12px 15px;">Ext. Name</th>
+                                <th style="padding: 12px 15px;">Code</th>
+                                <th style="padding: 12px 15px;">Agent Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #dddddd;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C001"></td>
+                                <td style="padding: 12px 15px;">C001</td>
+                                <td style="padding: 12px 15px;">John</td>
+                                <td style="padding: 12px 15px;">A</td>
+                                <td style="padding: 12px 15px;">Smith</td>
+                                <td style="padding: 12px 15px;">Jr.</td>
+                                <td style="padding: 12px 15px;">IH</td>
+                                <td style="padding: 12px 15px;">AG-001</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dddddd; background-color: #f3f3f3;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C002"></td>
+                                <td style="padding: 12px 15px;">C002</td>
+                                <td style="padding: 12px 15px;">Maria</td>
+                                <td style="padding: 12px 15px;">B</td>
+                                <td style="padding: 12px 15px;">Johnson</td>
+                                <td style="padding: 12px 15px;"></td>
+                                <td style="padding: 12px 15px;">A-B</td>
+                                <td style="padding: 12px 15px;">AG-002</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dddddd;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C003"></td>
+                                <td style="padding: 12px 15px;">C003</td>
+                                <td style="padding: 12px 15px;">Robert</td>
+                                <td style="padding: 12px 15px;">C</td>
+                                <td style="padding: 12px 15px;">Williams</td>
+                                <td style="padding: 12px 15px;">III</td>
+                                <td style="padding: 12px 15px;">A-NB</td>
+                                <td style="padding: 12px 15px;">AG-003</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="cancelCustomerSearch" class="btn-action btn-secondary">Cancel</button>
+                    <button type="button" id="selectCustomer" class="btn-action btn-primary">Select</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -780,6 +1103,79 @@
                 // Confirm before canceling
                 if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
                     window.location.href = 'proposal-list.html';
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Customer Search Popup
+            const customerSearchBtn = document.getElementById('customerSearchBtn');
+            const customerSearchPopup = document.getElementById('customerSearchPopup');
+            const closeCustomerSearch = document.getElementById('closeCustomerSearch');
+            const cancelCustomerSearch = document.getElementById('cancelCustomerSearch');
+            const selectCustomer = document.getElementById('selectCustomer');
+            
+            // Show popup when search button is clicked
+            customerSearchBtn.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'block';
+            });
+            
+            // Close popup when close button is clicked
+            closeCustomerSearch.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'none';
+            });
+            
+            // Close popup when cancel button is clicked
+            cancelCustomerSearch.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'none';
+            });
+            
+            // Handle customer selection
+            selectCustomer.addEventListener('click', function() {
+                const selectedCustomer = document.querySelector('input[name="selectedCustomer"]:checked');
+                
+                if (selectedCustomer) {
+                    const row = selectedCustomer.closest('tr');
+                    
+                    // Get customer data from the selected row
+                    const customerId = row.querySelector('td:nth-child(2)').textContent;
+                    const firstName = row.querySelector('td:nth-child(3)').textContent;
+                    const middleInitial = row.querySelector('td:nth-child(4)').textContent;
+                    const lastName = row.querySelector('td:nth-child(5)').textContent;
+                    const extName = row.querySelector('td:nth-child(6)').textContent;
+                    const code = row.querySelector('td:nth-child(7)').textContent;
+                    const agentCode = row.querySelector('td:nth-child(8)').textContent;
+                    
+                    // Populate form fields with the selected customer data
+                    document.getElementById('customerId').value = customerId;
+                    document.getElementById('firstName').value = firstName;
+                    document.getElementById('middleInitial').value = middleInitial;
+                    document.getElementById('lastName').value = lastName;
+                    document.getElementById('extName').value = extName;
+                    
+                    // Set the code dropdown to match the customer's code
+                    const codeSelect = document.getElementById('code');
+                    for (let i = 0; i < codeSelect.options.length; i++) {
+                        if (codeSelect.options[i].value === code) {
+                            codeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    // Set agent code
+                    document.getElementById('agentCode').value = agentCode;
+                    
+                    // Close the popup
+                    customerSearchPopup.style.display = 'none';
+                } else {
+                    alert('Please select a customer');
+                }
+            });
+            
+            // Allow clicking outside the popup to close it
+            customerSearchPopup.addEventListener('click', function(e) {
+                if (e.target === customerSearchPopup) {
+                    customerSearchPopup.style.display = 'none';
                 }
             });
         });

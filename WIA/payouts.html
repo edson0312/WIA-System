@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - Payouts</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin: 5% auto;
+            background-color: white;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1010;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .btn-remitted {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-remitted:hover {
+            background-color: #45a049;
+        }
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        .soa-link, .remittance-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .soa-link:hover, .remittance-link:hover {
+            text-decoration: underline;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        thead tr {
+            background-color: #009879;
+            color: white;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Monthly sorting dropdown */
+        .sorting-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        .monthly-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 14px;
+        }
+        /* Form popup styles */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+            width: 400px;
+        }
+        .form-popup h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-upload {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-upload:hover {
+            background-color: #0055aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html" class="active">Payouts</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="sales-report.html">Sales Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1>Payouts</h1>
+        </div>
+        
+        <div class="sorting-container">
+            <select class="monthly-select">
+                <option value="all">All Months</option>
+                <option value="jan">January</option>
+                <option value="feb">February</option>
+                <option value="mar">March</option>
+                <option value="apr">April</option>
+                <option value="may">May</option>
+                <option value="jun">June</option>
+                <option value="jul">July</option>
+                <option value="aug">August</option>
+                <option value="sep">September</option>
+                <option value="oct">October</option>
+                <option value="nov">November</option>
+                <option value="dec">December</option>
+            </select>
+        </div>
+        
+        <div class="table-container">
+            <table id="payoutsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="soaNo">SOA No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="clientName">Client's Name <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="type">Type <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="agentName">Agent's Name (Code) <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="gcashAccount">GCash Account <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="commission">Commission <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="invNo">INV. No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="transactionDate">Transaction Date <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="proofOfRemittance">Proof of Remittance <span class="sort-icon">↕</span></th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="files/soa/SOA (MILESTONE) - PC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - PC.pdf">SOA-PC-001</a></td>
+                        <td>Johnson Emma</td>
+                        <td>PC - PRIVATE CARS</td>
+                        <td>Mark Wilson (AG-001)</td>
+                        <td>09123456789</td>
+                        <td>₱5,250</td>
+                        <td>INV-2023-001</td>
+                        <td>2023-05-15</td>
+                        <td><button class="btn-upload upload-remittance-btn">Upload</button></td>
+                        <td><button class="btn-remitted">Remitted</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="files/soa/SOA (MILESTONE) - MC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - MC.pdf">SOA-MC-002</a></td>
+                        <td>Williams Robert</td>
+                        <td>MC - MOTORCYCLE</td>
+                        <td>Sarah Brown (AG-002)</td>
+                        <td>09987654321</td>
+                        <td>₱3,300</td>
+                        <td>INV-2023-002</td>
+                        <td>2023-06-01</td>
+                        <td><a href="#" class="remittance-link" data-pdf="files/remittance/receipt-001.pdf">receipt-001.pdf</a></td>
+                        <td><button class="btn-remitted" disabled>Remitted ✓</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="files/soa/SOA (ALPHA) - CV.pdf" class="soa-link" data-pdf="files/soa/SOA (ALPHA) - CV.pdf">SOA-CV-003</a></td>
+                        <td>Smith John</td>
+                        <td>CV - COMMERCIAL VEHICLE</td>
+                        <td>David Lee (AG-003)</td>
+                        <td>09567891234</td>
+                        <td>₱7,800</td>
+                        <td>INV-2023-003</td>
+                        <td>2023-07-10</td>
+                        <td><button class="btn-upload upload-remittance-btn">Upload</button></td>
+                        <td><button class="btn-remitted">Remitted</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            <button class="btn-page">Previous</button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page">2</button>
+            <button class="btn-page">3</button>
+            <button class="btn-page">Next</button>
+        </div>
+    </div>
+
+    <!-- PDF Popup -->
+    <div id="pdfPopup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+    
+    <!-- Upload Remittance Popup -->
+    <div id="uploadRemittancePopup" class="form-popup">
+        <h2>Upload Proof of Remittance</h2>
+        <form id="uploadRemittanceForm">
+            <div class="form-group">
+                <label for="remittanceFileName">Name of the File (optional)</label>
+                <input type="text" id="remittanceFileName" name="fileName" placeholder="Leave blank to use the uploaded filename">
+            </div>
+            <div class="form-group">
+                <label for="remittanceFile">Select File</label>
+                <input type="file" id="remittanceFile" name="remittanceFile" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelRemittanceUpload">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmRemittanceUpload">Upload</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Popup functionality for SOA and remittance links
+            const soaLinks = document.querySelectorAll('.soa-link');
+            const remittanceLinks = document.querySelectorAll('.remittance-link');
+            const popup = document.getElementById('pdfPopup');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const closeBtn = document.querySelector('.popup-close');
+            
+            // Function to handle all PDF links
+            function setupPdfLinks(links) {
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const pdfPath = this.getAttribute('data-pdf');
+                        pdfFrame.src = pdfPath;
+                        popup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup all PDF links
+            setupPdfLinks(soaLinks);
+            setupPdfLinks(remittanceLinks);
+            
+            // Close popup functionality
+            closeBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+                pdfFrame.src = '';
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = 'none';
+                    pdfFrame.src = '';
+                }
+            });
+
+            // Upload Remittance functionality
+            const uploadRemittancePopup = document.getElementById('uploadRemittancePopup');
+            const remittanceFileInput = document.getElementById('remittanceFile');
+            const remittanceFileNameInput = document.getElementById('remittanceFileName');
+            const cancelRemittanceUploadBtn = document.getElementById('cancelRemittanceUpload');
+            const confirmRemittanceUploadBtn = document.getElementById('confirmRemittanceUpload');
+            let currentUploadBtn = null;
+            
+            const uploadRemittanceBtns = document.querySelectorAll('.upload-remittance-btn');
+            uploadRemittanceBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentUploadBtn = this;
+                    uploadRemittancePopup.style.display = 'block';
+                });
+            });
+            
+            cancelRemittanceUploadBtn.addEventListener('click', function() {
+                uploadRemittancePopup.style.display = 'none';
+                document.getElementById('uploadRemittanceForm').reset();
+                currentUploadBtn = null;
+            });
+            
+            confirmRemittanceUploadBtn.addEventListener('click', function() {
+                const fileInput = remittanceFileInput;
+                const fileName = remittanceFileNameInput.value.trim() || (fileInput.files.length > 0 ? fileInput.files[0].name : 'Remittance Receipt');
+                
+                if (fileInput.files.length > 0 && currentUploadBtn) {
+                    // Replace the button with a link to the uploaded file
+                    const tdElement = currentUploadBtn.parentElement;
+                    tdElement.innerHTML = `
+                        <a href="#" class="remittance-link" data-pdf="files/remittance/${fileName}">${fileName}</a>
+                    `;
+                    
+                    // Setup PDF link for the new link
+                    setupPdfLinks(tdElement.querySelectorAll('.remittance-link'));
+                    
+                    // Update remitted button to show as remitted
+                    const row = tdElement.parentElement;
+                    const remittedBtn = row.querySelector('.btn-remitted');
+                    if (remittedBtn) {
+                        remittedBtn.disabled = true;
+                        remittedBtn.textContent = 'Remitted ✓';
+                    }
+                    
+                    // Close the popup
+                    uploadRemittancePopup.style.display = 'none';
+                    document.getElementById('uploadRemittanceForm').reset();
+                    currentUploadBtn = null;
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+
+            // Remitted button functionality
+            const remittedBtns = document.querySelectorAll('.btn-remitted:not([disabled])');
+            remittedBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const proofOfRemittanceCell = row.querySelector('td:nth-child(9)');
+                    
+                    if (proofOfRemittanceCell.querySelector('.remittance-link')) {
+                        // If there's already a remittance link, mark as remitted
+                        this.disabled = true;
+                        this.textContent = 'Remitted ✓';
+                        alert('Remittance recorded successfully!');
+                    } else {
+                        // If no remittance proof yet, prompt to upload first
+                        alert('Please upload proof of remittance first.');
+                    }
+                });
+            });
+
+            // Sorting functionality
+            const sortableHeaders = document.querySelectorAll('th.sortable');
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-column');
+                    // Sort implementation would go here
+                    alert(`Sorting by ${column}`);
+                });
+            });
+
+            // Monthly filter functionality
+            const monthlySelect = document.querySelector('.monthly-select');
+            monthlySelect.addEventListener('change', function() {
+                const selectedMonth = this.value;
+                alert(`Filtering by month: ${selectedMonth}`);
+                // Here you would typically filter the table data based on the selected month
+            });
+        });
+    </script>
+</body>
+</html> 

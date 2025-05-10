@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - Sales Report</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin: 5% auto;
+            background-color: white;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1010;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        .soa-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .soa-link:hover {
+            text-decoration: underline;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        thead tr {
+            background-color: #009879;
+            color: white;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Monthly sorting dropdown */
+        .sorting-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        .monthly-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 14px;
+        }
+        /* Total row */
+        .total-row td {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+        /* Export button */
+        .btn-export {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .btn-export:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html" class="active">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="agent-registration.html">Register an Agent</a>
+                    <a href="customer-update.html">Customer Update</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1>Sales Report</h1>
+        </div>
+        
+        <div class="sorting-container">
+            <select class="monthly-select">
+                <option value="all">All Months</option>
+                <option value="jan">January</option>
+                <option value="feb">February</option>
+                <option value="mar">March</option>
+                <option value="apr">April</option>
+                <option value="may">May</option>
+                <option value="jun">June</option>
+                <option value="jul">July</option>
+                <option value="aug">August</option>
+                <option value="sep">September</option>
+                <option value="oct">October</option>
+                <option value="nov">November</option>
+                <option value="dec">December</option>
+            </select>
+            <button class="btn-export">Export as Excel</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="salesReportTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="transactionDate">Transaction Date <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="soaNo">SOA No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="type">Type <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="agentName">Agent's Name (Code) <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="policyProvider">Policy Provider <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="gross">Gross <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="profit">Profit <span class="sort-icon">↕</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2023-05-15</td>
+                        <td><a href="files/soa/SOA (MILESTONE) - PC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - PC.pdf">SOA-PC-001</a></td>
+                        <td>PC - PRIVATE CARS</td>
+                        <td>Mark Wilson (AG-001)</td>
+                        <td>AISCIA</td>
+                        <td>₱35,000</td>
+                        <td>₱8,750</td>
+                    </tr>
+                    <tr>
+                        <td>2023-06-01</td>
+                        <td><a href="files/soa/SOA (MILESTONE) - MC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - MC.pdf">SOA-MC-002</a></td>
+                        <td>MC - MOTORCYCLE</td>
+                        <td>Sarah Brown (AG-002)</td>
+                        <td>MG</td>
+                        <td>₱22,000</td>
+                        <td>₱5,500</td>
+                    </tr>
+                    <tr>
+                        <td>2023-07-10</td>
+                        <td><a href="files/soa/SOA (ALPHA) - CV.pdf" class="soa-link" data-pdf="files/soa/SOA (ALPHA) - CV.pdf">SOA-CV-003</a></td>
+                        <td>CV - COMMERCIAL VEHICLE</td>
+                        <td>David Lee (AG-003)</td>
+                        <td>MGAC</td>
+                        <td>₱52,000</td>
+                        <td>₱13,000</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="5">Total</td>
+                        <td>₱109,000</td>
+                        <td>₱27,250</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            <button class="btn-page">Previous</button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page">2</button>
+            <button class="btn-page">3</button>
+            <button class="btn-page">Next</button>
+        </div>
+    </div>
+
+    <!-- PDF Popup -->
+    <div id="pdfPopup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for sales data in localStorage
+            const salesData = localStorage.getItem('salesReport');
+            if (salesData) {
+                try {
+                    const sales = JSON.parse(salesData);
+                    
+                    // Add sales data to the table if it exists
+                    const tbody = document.querySelector('#salesReportTable tbody');
+                    const totalRow = document.querySelector('.total-row');
+                    
+                    // Remove total row temporarily
+                    if (totalRow) {
+                        totalRow.remove();
+                    }
+                    
+                    // Add each sale to the table
+                    sales.forEach(sale => {
+                        const newRow = document.createElement('tr');
+                        
+                        newRow.innerHTML = `
+                            <td>${sale.transactionDate}</td>
+                            <td><a href="#" class="soa-link" data-pdf="files/soa/${sale.soaNo}.pdf">${sale.soaNo}</a></td>
+                            <td>${sale.type}</td>
+                            <td>${sale.agentName}</td>
+                            <td>${sale.policyProvider}</td>
+                            <td>${sale.gross}</td>
+                            <td>${sale.profit}</td>
+                        `;
+                        
+                        // Add the new row to the top of the table
+                        tbody.appendChild(newRow);
+                    });
+                    
+                    // Re-add total row and recalculate totals
+                    recalculateTotals();
+                    
+                    // Setup PDF links for the new rows
+                    setupPdfLinks(document.querySelectorAll('.soa-link'));
+                    
+                } catch (e) {
+                    console.error('Error parsing sales data:', e);
+                }
+            }
+            
+            // Function to recalculate totals
+            function recalculateTotals() {
+                const rows = document.querySelectorAll('#salesReportTable tbody tr:not(.total-row)');
+                let totalGross = 0;
+                let totalProfit = 0;
+                
+                rows.forEach(row => {
+                    const grossText = row.querySelector('td:nth-child(6)').textContent;
+                    const profitText = row.querySelector('td:nth-child(7)').textContent;
+                    
+                    // Extract numeric value from currency string
+                    const grossValue = parseFloat(grossText.replace(/[^\d.-]/g, ''));
+                    const profitValue = parseFloat(profitText.replace(/[^\d.-]/g, ''));
+                    
+                    if (!isNaN(grossValue)) totalGross += grossValue;
+                    if (!isNaN(profitValue)) totalProfit += profitValue;
+                });
+                
+                // Format as currency
+                const formattedGross = `₱${totalGross.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+                const formattedProfit = `₱${totalProfit.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
+                
+                // Add or update total row
+                const tbody = document.querySelector('#salesReportTable tbody');
+                let totalRow = document.querySelector('.total-row');
+                
+                if (totalRow) {
+                    totalRow.querySelector('td:nth-child(6)').textContent = formattedGross;
+                    totalRow.querySelector('td:nth-child(7)').textContent = formattedProfit;
+                } else {
+                    totalRow = document.createElement('tr');
+                    totalRow.className = 'total-row';
+                    totalRow.innerHTML = `
+                        <td colspan="5">Total</td>
+                        <td>${formattedGross}</td>
+                        <td>${formattedProfit}</td>
+                    `;
+                    tbody.appendChild(totalRow);
+                }
+            }
+            
+            // Popup functionality for SOA links
+            const soaLinks = document.querySelectorAll('.soa-link');
+            const popup = document.getElementById('pdfPopup');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const closeBtn = document.querySelector('.popup-close');
+            
+            // Function to handle all PDF links
+            function setupPdfLinks(links) {
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const pdfPath = this.getAttribute('data-pdf');
+                        pdfFrame.src = pdfPath;
+                        popup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup all PDF links
+            setupPdfLinks(soaLinks);
+            
+            // Close popup functionality
+            closeBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+                pdfFrame.src = '';
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = 'none';
+                    pdfFrame.src = '';
+                }
+            });
+            
+            // Export button functionality
+            const exportBtn = document.querySelector('.btn-export');
+            exportBtn.addEventListener('click', function() {
+                alert('Exporting sales report as Excel...');
+                // In a real implementation, this would generate and download an Excel file
+            });
+
+            // Sorting functionality
+            const sortableHeaders = document.querySelectorAll('th.sortable');
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-column');
+                    // Sort implementation would go here
+                    alert(`Sorting by ${column}`);
+                });
+            });
+
+            // Monthly filter functionality
+            const monthlySelect = document.querySelector('.monthly-select');
+            monthlySelect.addEventListener('change', function() {
+                const selectedMonth = this.value;
+                alert(`Filtering by month: ${selectedMonth}`);
+                // Here you would typically filter the table data based on the selected month
+            });
+        });
+    </script>
+</body>
+</html> 

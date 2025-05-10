@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - Collections</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin: 5% auto;
+            background-color: white;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1010;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .btn-collected {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-collected:hover {
+            background-color: #45a049;
+        }
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        .soa-link, .policy-link, .payment-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .soa-link:hover, .policy-link:hover, .payment-link:hover {
+            text-decoration: underline;
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        thead tr {
+            background-color: #009879;
+            color: white;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Monthly sorting dropdown */
+        .sorting-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        .monthly-select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        /* Form popup styles */
+        .form-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+            width: 400px;
+        }
+        .form-popup h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-upload {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-upload:hover {
+            background-color: #0055aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html" class="active">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="agent-registration.html">Register an Agent</a>
+                    <a href="customer-update.html">Customer Update</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1>Collections</h1>
+        </div>
+        
+        <div class="sorting-container">
+            <select class="monthly-select">
+                <option value="all">All Months</option>
+                <option value="jan">January</option>
+                <option value="feb">February</option>
+                <option value="mar">March</option>
+                <option value="apr">April</option>
+                <option value="may">May</option>
+                <option value="jun">June</option>
+                <option value="jul">July</option>
+                <option value="aug">August</option>
+                <option value="sep">September</option>
+                <option value="oct">October</option>
+                <option value="nov">November</option>
+                <option value="dec">December</option>
+            </select>
+        </div>
+        
+        <div class="table-container">
+            <table id="collectionsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="soa">SOA <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="mv">MV <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="amount">Amount <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="paymentTerms">Payment Terms <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="modeOfPayment">Mode of Payment <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="dueDate">Due Date <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="dateIssued">Date Issued <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="assured">Assured <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="policyNo">Policy No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="invNo">INV. No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="inceptionDate">Inception Date <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="expiryDate">Expiry Date <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="proofOfPayment">Proof of Payment <span class="sort-icon">↕</span></th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="files/soa/SOA (MILESTONE) - PC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - PC.pdf">SOA (MILESTONE) - PC</a></td>
+                        <td>500,000</td>
+                        <td>₱1,500</td>
+                        <td>1/6</td>
+                        <td>Bank Transfer</td>
+                        <td>2023-06-15</td>
+                        <td>2023-05-15</td>
+                        <td>Johnson Emma</td>
+                        <td><a href="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf">POLICY-MILESTONE-PC-002</a></td>
+                        <td>INV-2023-001</td>
+                        <td>2023-05-01</td>
+                        <td>2024-05-01</td>
+                        <td><button class="btn-upload upload-payment-btn">Upload</button></td>
+                        <td><button class="btn-collected">Collected</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="files/soa/SOA (MILESTONE) - MC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - MC.pdf">SOA (MILESTONE) - MC</a></td>
+                        <td>300,000</td>
+                        <td>₱1,800</td>
+                        <td>2/4</td>
+                        <td>PDC</td>
+                        <td>2023-07-01</td>
+                        <td>2023-06-01</td>
+                        <td>Williams Robert</td>
+                        <td><a href="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf">POLICY-MILESTONE-MC-003</a></td>
+                        <td>INV-2023-002</td>
+                        <td>2023-06-15</td>
+                        <td>2024-06-15</td>
+                        <td><button class="btn-upload upload-payment-btn">Upload</button></td>
+                        <td><button class="btn-collected">Collected</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="files/soa/SOA (ALPHA) - CV.pdf" class="soa-link" data-pdf="files/soa/SOA (ALPHA) - CV.pdf">SOA (ALPHA) - CV</a></td>
+                        <td>750,000</td>
+                        <td>₱50,000</td>
+                        <td>1/1</td>
+                        <td>Cash</td>
+                        <td>2023-08-10</td>
+                        <td>2023-07-10</td>
+                        <td>Smith John</td>
+                        <td><a href="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf">POLICY-ALPHA-CV-001</a></td>
+                        <td>INV-2023-003</td>
+                        <td>2023-07-01</td>
+                        <td>2024-07-01</td>
+                        <td><a href="#" class="payment-link" data-pdf="files/payments/payment-receipt-001.pdf">payment-receipt-001.pdf</a></td>
+                        <td><button class="btn-collected" disabled>Collected ✓</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            <button class="btn-page">Previous</button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page">2</button>
+            <button class="btn-page">3</button>
+            <button class="btn-page">Next</button>
+        </div>
+    </div>
+
+    <!-- PDF Popup -->
+    <div id="pdfPopup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+    
+    <!-- Upload Payment Popup -->
+    <div id="uploadPaymentPopup" class="form-popup">
+        <h2>Upload Proof of Payment</h2>
+        <form id="uploadPaymentForm">
+            <div class="form-group">
+                <label for="paymentFileName">Name of the File (optional)</label>
+                <input type="text" id="paymentFileName" name="fileName" placeholder="Leave blank to use the uploaded filename">
+            </div>
+            <div class="form-group">
+                <label for="paymentFile">Select File</label>
+                <input type="file" id="paymentFile" name="paymentFile" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelPaymentUpload">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmPaymentUpload">Upload</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for collections data in localStorage
+            const collectionsData = localStorage.getItem('collections');
+            if (collectionsData) {
+                try {
+                    const collections = JSON.parse(collectionsData);
+                    
+                    // Add collections data to the table if it exists
+                    const tbody = document.querySelector('#collectionsTable tbody');
+                    
+                    collections.forEach(collection => {
+                        const newRow = document.createElement('tr');
+                        
+                        // Prepare the proof of payment cell content
+                        let proofOfPaymentCell = '';
+                        if (collection.proofOfPayment) {
+                            proofOfPaymentCell = `<a href="#" class="payment-link" data-pdf="files/payments/${collection.proofOfPayment}">${collection.proofOfPayment}</a>`;
+                        } else {
+                            proofOfPaymentCell = `<button class="btn-upload upload-payment-btn">Upload</button>`;
+                        }
+                        
+                        // Add the collection data to the row
+                        newRow.innerHTML = `
+                            <td><a href="#" class="soa-link" data-pdf="files/soa/${collection.soa}.pdf">${collection.soa}</a></td>
+                            <td>${collection.mv}</td>
+                            <td>${collection.amount}</td>
+                            <td>${collection.paymentTerms}</td>
+                            <td>${collection.modeOfPayment}</td>
+                            <td>${collection.dueDate}</td>
+                            <td>${collection.dateIssued}</td>
+                            <td>${collection.assured}</td>
+                            <td><a href="#" class="policy-link" data-pdf="files/policy/${collection.policyNo}.pdf">${collection.policyNo}</a></td>
+                            <td>${collection.invNo}</td>
+                            <td>${collection.inceptionDate}</td>
+                            <td>${collection.expiryDate}</td>
+                            <td>${proofOfPaymentCell}</td>
+                            <td><button class="btn-collected"${collection.proofOfPayment ? ' disabled' : ''}>
+                                ${collection.proofOfPayment ? 'Collected ✓' : 'Collected'}
+                            </button></td>
+                        `;
+                        
+                        // Add the new row to the top of the table
+                        if (tbody.firstChild) {
+                            tbody.insertBefore(newRow, tbody.firstChild);
+                        } else {
+                            tbody.appendChild(newRow);
+                        }
+                    });
+                    
+                    // Setup PDF links and other functionality for the new rows
+                    setupPdfLinks(document.querySelectorAll('.soa-link, .policy-link, .payment-link'));
+                    setupUploadButtons();
+                    setupCollectedButtons();
+                    
+                } catch (e) {
+                    console.error('Error parsing collections data:', e);
+                }
+            }
+            
+            // Popup functionality for SOA and policy links
+            const soaLinks = document.querySelectorAll('.soa-link');
+            const policyLinks = document.querySelectorAll('.policy-link');
+            const paymentLinks = document.querySelectorAll('.payment-link');
+            const popup = document.getElementById('pdfPopup');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const closeBtn = document.querySelector('.popup-close');
+            
+            // Function to handle all PDF links
+            function setupPdfLinks(links) {
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const pdfPath = this.getAttribute('data-pdf');
+                        pdfFrame.src = pdfPath;
+                        popup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup all PDF links
+            setupPdfLinks(soaLinks);
+            setupPdfLinks(policyLinks);
+            setupPdfLinks(paymentLinks);
+            
+            // Close popup functionality
+            closeBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+                pdfFrame.src = '';
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = 'none';
+                    pdfFrame.src = '';
+                }
+            });
+
+            // Upload Payment functionality
+            const uploadPaymentPopup = document.getElementById('uploadPaymentPopup');
+            const paymentFileInput = document.getElementById('paymentFile');
+            const paymentFileNameInput = document.getElementById('paymentFileName');
+            const cancelPaymentUploadBtn = document.getElementById('cancelPaymentUpload');
+            const confirmPaymentUploadBtn = document.getElementById('confirmPaymentUpload');
+            let currentUploadBtn = null;
+            
+            function setupUploadButtons() {
+                const uploadPaymentBtns = document.querySelectorAll('.upload-payment-btn');
+                uploadPaymentBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        currentUploadBtn = this;
+                        uploadPaymentPopup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup initial upload buttons
+            setupUploadButtons();
+            
+            cancelPaymentUploadBtn.addEventListener('click', function() {
+                uploadPaymentPopup.style.display = 'none';
+                document.getElementById('uploadPaymentForm').reset();
+                currentUploadBtn = null;
+            });
+            
+            confirmPaymentUploadBtn.addEventListener('click', function() {
+                const fileInput = paymentFileInput;
+                const fileName = paymentFileNameInput.value.trim() || (fileInput.files.length > 0 ? fileInput.files[0].name : 'Payment Receipt');
+                
+                if (fileInput.files.length > 0 && currentUploadBtn) {
+                    // Replace the button with a link to the uploaded file
+                    const tdElement = currentUploadBtn.parentElement;
+                    tdElement.innerHTML = `
+                        <a href="#" class="payment-link" data-pdf="files/payments/${fileName}">${fileName}</a>
+                    `;
+                    
+                    // Setup PDF link for the new link
+                    setupPdfLinks(tdElement.querySelectorAll('.payment-link'));
+                    
+                    // Update collected button to show as collected
+                    const row = tdElement.parentElement;
+                    const collectedBtn = row.querySelector('.btn-collected');
+                    if (collectedBtn) {
+                        collectedBtn.disabled = true;
+                        collectedBtn.textContent = 'Collected ✓';
+                    }
+                    
+                    // Update collections data in localStorage
+                    updateCollectionsData(row, fileName);
+                    
+                    uploadPaymentPopup.style.display = 'none';
+                    document.getElementById('uploadPaymentForm').reset();
+                    currentUploadBtn = null;
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+            
+            // Function to update collections data in localStorage
+            function updateCollectionsData(row, fileName) {
+                const soaText = row.querySelector('td:nth-child(1) a').textContent;
+                const collectionsData = localStorage.getItem('collections');
+                
+                if (collectionsData) {
+                    const collections = JSON.parse(collectionsData);
+                    const index = collections.findIndex(item => item.soa === soaText);
+                    
+                    if (index !== -1) {
+                        collections[index].proofOfPayment = fileName;
+                        localStorage.setItem('collections', JSON.stringify(collections));
+                    }
+                }
+            }
+
+            // Collection button functionality
+            function setupCollectedButtons() {
+                const collectedBtns = document.querySelectorAll('.btn-collected:not([disabled])');
+                collectedBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const row = this.closest('tr');
+                        const proofOfPaymentCell = row.querySelector('td:nth-child(13)');
+                        
+                        if (proofOfPaymentCell.querySelector('.payment-link')) {
+                            // If there's already a payment link, mark as collected
+                            this.disabled = true;
+                            this.textContent = 'Collected ✓';
+                            
+                            // Update collections data in localStorage
+                            const soaText = row.querySelector('td:nth-child(1) a').textContent;
+                            const paymentLink = proofOfPaymentCell.querySelector('.payment-link');
+                            const fileName = paymentLink.textContent;
+                            
+                            updateCollectionsData(row, fileName);
+                            
+                            // Add to Sales Report
+                            addToSalesReport(row);
+                            
+                            // Remove from collections after a delay (to show confirmation)
+                            setTimeout(() => {
+                                removeFromCollections(row, soaText);
+                            }, 1500);
+                            
+                            alert('Payment collected successfully!');
+                        } else {
+                            // If no payment proof yet, prompt to upload first
+                            alert('Please upload proof of payment first.');
+                        }
+                    });
+                });
+            }
+            
+            // Function to add the collected item to sales report
+            function addToSalesReport(row) {
+                // Get data from the row
+                const soaText = row.querySelector('td:nth-child(1) a').textContent;
+                const amount = row.querySelector('td:nth-child(3)').textContent;
+                const clientName = row.querySelector('td:nth-child(8)').textContent;
+                const policyProvider = 'AISCIA'; // Default, could be extracted from somewhere else
+                
+                // Extract vehicle type from SOA text
+                let vehicleType = 'PC - PRIVATE CARS'; // Default
+                if (soaText.includes('MC')) {
+                    vehicleType = 'MC - MOTORCYCLE';
+                } else if (soaText.includes('CV')) {
+                    vehicleType = 'CV - COMMERCIAL VEHICLE';
+                }
+                
+                // Calculate approximate profit (25% of gross amount)
+                const grossAmount = amount;
+                const profitAmount = '₱' + (parseFloat(amount.replace(/[^\d.-]/g, '')) * 0.25).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                
+                // Create sales report entry
+                const salesReportEntry = {
+                    transactionDate: new Date().toISOString().split('T')[0], // Today
+                    soaNo: soaText,
+                    type: vehicleType,
+                    agentName: 'Mark Wilson (AG-001)', // Default agent
+                    policyProvider: policyProvider,
+                    gross: grossAmount,
+                    profit: profitAmount
+                };
+                
+                // Get existing sales report data or create new array
+                const existingSalesReport = JSON.parse(localStorage.getItem('salesReport') || '[]');
+                existingSalesReport.push(salesReportEntry);
+                localStorage.setItem('salesReport', JSON.stringify(existingSalesReport));
+            }
+            
+            // Function to remove from collections
+            function removeFromCollections(row, soaText) {
+                // Remove from UI
+                row.remove();
+                
+                // Remove from localStorage
+                const collectionsData = localStorage.getItem('collections');
+                if (collectionsData) {
+                    const collections = JSON.parse(collectionsData);
+                    const updatedCollections = collections.filter(item => item.soa !== soaText);
+                    localStorage.setItem('collections', JSON.stringify(updatedCollections));
+                }
+            }
+            
+            // Setup initial collected buttons
+            setupCollectedButtons();
+
+            // Sorting functionality
+            const sortableHeaders = document.querySelectorAll('th.sortable');
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-column');
+                    // Sort implementation would go here
+                    alert(`Sorting by ${column}`);
+                });
+            });
+
+            // Monthly filter functionality
+            const monthlySelect = document.querySelector('.monthly-select');
+            monthlySelect.addEventListener('change', function() {
+                const selectedMonth = this.value;
+                alert(`Filtering by month: ${selectedMonth}`);
+                // Here you would typically filter the table data based on the selected month
+            });
+        });
+    </script>
+</body>
+</html> 
