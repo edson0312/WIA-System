@@ -196,10 +196,13 @@
                     <a href="proposal-list.html">Proposals</a>
                     <a href="collections.html" class="active">Collections</a>
                     <a href="payouts.html">Payouts</a>
-                    <a href="rejected.html">Rejected</a>
                     <a href="sales-report.html">Sales Report</a>
-                    <a href="agent-registration.html">Register an Agent</a>
-                    <a href="customer-update.html">Customer Update</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
                 </div>
             </div>
         </div>
@@ -252,7 +255,6 @@
                         <th class="sortable" data-column="dateIssued">Date Issued <span class="sort-icon">↕</span></th>
                         <th class="sortable" data-column="assured">Assured <span class="sort-icon">↕</span></th>
                         <th class="sortable" data-column="policyNo">Policy No. <span class="sort-icon">↕</span></th>
-                        <th class="sortable" data-column="invNo">INV. No. <span class="sort-icon">↕</span></th>
                         <th class="sortable" data-column="inceptionDate">Inception Date <span class="sort-icon">↕</span></th>
                         <th class="sortable" data-column="expiryDate">Expiry Date <span class="sort-icon">↕</span></th>
                         <th class="sortable" data-column="proofOfPayment">Proof of Payment <span class="sort-icon">↕</span></th>
@@ -270,7 +272,6 @@
                         <td>2023-05-15</td>
                         <td>Johnson Emma</td>
                         <td><a href="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf">POLICY-MILESTONE-PC-002</a></td>
-                        <td>INV-2023-001</td>
                         <td>2023-05-01</td>
                         <td>2024-05-01</td>
                         <td><button class="btn-upload upload-payment-btn">Upload</button></td>
@@ -286,7 +287,6 @@
                         <td>2023-06-01</td>
                         <td>Williams Robert</td>
                         <td><a href="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf">POLICY-MILESTONE-MC-003</a></td>
-                        <td>INV-2023-002</td>
                         <td>2023-06-15</td>
                         <td>2024-06-15</td>
                         <td><button class="btn-upload upload-payment-btn">Upload</button></td>
@@ -302,11 +302,10 @@
                         <td>2023-07-10</td>
                         <td>Smith John</td>
                         <td><a href="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf">POLICY-ALPHA-CV-001</a></td>
-                        <td>INV-2023-003</td>
                         <td>2023-07-01</td>
                         <td>2024-07-01</td>
                         <td><a href="#" class="payment-link" data-pdf="files/payments/payment-receipt-001.pdf">payment-receipt-001.pdf</a></td>
-                        <td><button class="btn-collected" disabled>Collected ✓</button></td>
+                        <td><button class="btn-collected">Collected</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -381,12 +380,11 @@
                             <td>${collection.dateIssued}</td>
                             <td>${collection.assured}</td>
                             <td><a href="#" class="policy-link" data-pdf="files/policy/${collection.policyNo}.pdf">${collection.policyNo}</a></td>
-                            <td>${collection.invNo}</td>
                             <td>${collection.inceptionDate}</td>
                             <td>${collection.expiryDate}</td>
                             <td>${proofOfPaymentCell}</td>
-                            <td><button class="btn-collected"${collection.proofOfPayment ? ' disabled' : ''}>
-                                ${collection.proofOfPayment ? 'Collected ✓' : 'Collected'}
+                            <td><button class="btn-collected">
+                                ${collection.proofOfPayment ? 'Collected' : 'Collected'}
                             </button></td>
                         `;
                         
@@ -401,11 +399,16 @@
                     // Setup PDF links and other functionality for the new rows
                     setupPdfLinks(document.querySelectorAll('.soa-link, .policy-link, .payment-link'));
                     setupUploadButtons();
+                    
+                    // First call to setup collected buttons
                     setupCollectedButtons();
                     
                 } catch (e) {
                     console.error('Error parsing collections data:', e);
                 }
+            } else {
+                // No collections data, still initialize buttons
+                setupCollectedButtons();
             }
             
             // Popup functionality for SOA and policy links
@@ -491,16 +494,21 @@
                     const row = tdElement.parentElement;
                     const collectedBtn = row.querySelector('.btn-collected');
                     if (collectedBtn) {
-                        collectedBtn.disabled = true;
-                        collectedBtn.textContent = 'Collected ✓';
+                        collectedBtn.disabled = false; // Make sure it's enabled for the user to click
+                        collectedBtn.textContent = 'Collected';
                     }
                     
                     // Update collections data in localStorage
                     updateCollectionsData(row, fileName);
                     
+                    // Rebind all collected buttons to ensure the new upload has the event listener
+                    setupCollectedButtons();
+                    
                     uploadPaymentPopup.style.display = 'none';
                     document.getElementById('uploadPaymentForm').reset();
                     currentUploadBtn = null;
+                    
+                    alert('Payment proof uploaded. Click the "Collected" button to complete the process and remove from list.');
                 } else {
                     alert('Please select a file to upload.');
                 }
@@ -522,42 +530,51 @@
                 }
             }
 
-            // Collection button functionality
+            // Collected button functionality
             function setupCollectedButtons() {
+                console.log('Setting up collected buttons');
                 const collectedBtns = document.querySelectorAll('.btn-collected:not([disabled])');
                 collectedBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const row = this.closest('tr');
-                        const proofOfPaymentCell = row.querySelector('td:nth-child(13)');
-                        
-                        if (proofOfPaymentCell.querySelector('.payment-link')) {
-                            // If there's already a payment link, mark as collected
-                            this.disabled = true;
-                            this.textContent = 'Collected ✓';
-                            
-                            // Update collections data in localStorage
-                            const soaText = row.querySelector('td:nth-child(1) a').textContent;
-                            const paymentLink = proofOfPaymentCell.querySelector('.payment-link');
-                            const fileName = paymentLink.textContent;
-                            
-                            updateCollectionsData(row, fileName);
-                            
-                            // Add to Sales Report
-                            addToSalesReport(row);
-                            
-                            // Remove from collections after a delay (to show confirmation)
-                            setTimeout(() => {
-                                removeFromCollections(row, soaText);
-                            }, 1500);
-                            
-                            alert('Payment collected successfully!');
-                        } else {
-                            // If no payment proof yet, prompt to upload first
-                            alert('Please upload proof of payment first.');
-                        }
-                    });
+                    // Remove any existing event listeners to prevent duplicates
+                    btn.removeEventListener('click', collectedBtnClickHandler);
+                    // Add click event listener
+                    btn.addEventListener('click', collectedBtnClickHandler);
                 });
             }
+            
+            // Handler function for Collected button clicks
+            function collectedBtnClickHandler() {
+                console.log('Collected button clicked');
+                const row = this.closest('tr');
+                const proofOfPaymentCell = row.querySelector('td:nth-child(12)');
+                
+                if (proofOfPaymentCell.querySelector('.payment-link')) {
+                    // If there's already a payment link, mark as collected
+                    this.textContent = 'Collected';
+                    
+                    // Update collections data in localStorage
+                    const soaText = row.querySelector('td:nth-child(1) a').textContent;
+                    const paymentLink = proofOfPaymentCell.querySelector('.payment-link');
+                    const fileName = paymentLink.textContent;
+                    
+                    updateCollectionsData(row, fileName);
+                    
+                    // Add to Sales Report
+                    addToSalesReport(row);
+                    
+                    // Remove from collections immediately
+                    console.log('Removing row from collections table');
+                    row.remove();
+                    
+                    alert('Payment collected successfully and removed from list!');
+                } else {
+                    // If no payment proof yet, prompt to upload first
+                    alert('Please upload proof of payment first.');
+                }
+            }
+            
+            // Setup initial collected buttons
+            setupCollectedButtons();
             
             // Function to add the collected item to sales report
             function addToSalesReport(row) {
@@ -596,23 +613,6 @@
                 localStorage.setItem('salesReport', JSON.stringify(existingSalesReport));
             }
             
-            // Function to remove from collections
-            function removeFromCollections(row, soaText) {
-                // Remove from UI
-                row.remove();
-                
-                // Remove from localStorage
-                const collectionsData = localStorage.getItem('collections');
-                if (collectionsData) {
-                    const collections = JSON.parse(collectionsData);
-                    const updatedCollections = collections.filter(item => item.soa !== soaText);
-                    localStorage.setItem('collections', JSON.stringify(updatedCollections));
-                }
-            }
-            
-            // Setup initial collected buttons
-            setupCollectedButtons();
-
             // Sorting functionality
             const sortableHeaders = document.querySelectorAll('th.sortable');
             sortableHeaders.forEach(header => {

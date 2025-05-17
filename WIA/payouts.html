@@ -195,8 +195,13 @@
                     <a href="proposal-list.html">Proposals</a>
                     <a href="collections.html">Collections</a>
                     <a href="payouts.html" class="active">Payouts</a>
-                    <a href="rejected.html">Rejected</a>
                     <a href="sales-report.html">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
                 </div>
             </div>
         </div>
@@ -274,7 +279,7 @@
                         <td>INV-2023-002</td>
                         <td>2023-06-01</td>
                         <td><a href="#" class="remittance-link" data-pdf="files/remittance/receipt-001.pdf">receipt-001.pdf</a></td>
-                        <td><button class="btn-remitted" disabled>Remitted ✓</button></td>
+                        <td><button class="btn-remitted">Remitted</button></td>
                     </tr>
                     <tr>
                         <td><a href="files/soa/SOA (ALPHA) - CV.pdf" class="soa-link" data-pdf="files/soa/SOA (ALPHA) - CV.pdf">SOA-CV-003</a></td>
@@ -406,37 +411,59 @@
                     const row = tdElement.parentElement;
                     const remittedBtn = row.querySelector('.btn-remitted');
                     if (remittedBtn) {
-                        remittedBtn.disabled = true;
-                        remittedBtn.textContent = 'Remitted ✓';
+                        remittedBtn.disabled = false; // Make sure it's enabled for the user to click
+                        remittedBtn.textContent = 'Remitted';
                     }
+                    
+                    // Rebind all remitted buttons to ensure the new upload has the event listener
+                    setupRemittedButtons();
                     
                     // Close the popup
                     uploadRemittancePopup.style.display = 'none';
                     document.getElementById('uploadRemittanceForm').reset();
                     currentUploadBtn = null;
+                    
+                    alert('Remittance proof uploaded. Click the "Remitted" button to complete the process and remove from list.');
                 } else {
                     alert('Please select a file to upload.');
                 }
             });
 
             // Remitted button functionality
-            const remittedBtns = document.querySelectorAll('.btn-remitted:not([disabled])');
-            remittedBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const row = this.closest('tr');
-                    const proofOfRemittanceCell = row.querySelector('td:nth-child(9)');
-                    
-                    if (proofOfRemittanceCell.querySelector('.remittance-link')) {
-                        // If there's already a remittance link, mark as remitted
-                        this.disabled = true;
-                        this.textContent = 'Remitted ✓';
-                        alert('Remittance recorded successfully!');
-                    } else {
-                        // If no remittance proof yet, prompt to upload first
-                        alert('Please upload proof of remittance first.');
-                    }
+            function setupRemittedButtons() {
+                console.log('Setting up remitted buttons');
+                const remittedBtns = document.querySelectorAll('.btn-remitted:not([disabled])');
+                remittedBtns.forEach(btn => {
+                    // Remove any existing event listeners to prevent duplicates
+                    btn.removeEventListener('click', remittedBtnClickHandler);
+                    // Add click event listener
+                    btn.addEventListener('click', remittedBtnClickHandler);
                 });
-            });
+            }
+
+            // Handler function for Remitted button clicks
+            function remittedBtnClickHandler() {
+                console.log('Remitted button clicked');
+                const row = this.closest('tr');
+                const proofOfRemittanceCell = row.querySelector('td:nth-child(9)');
+                
+                if (proofOfRemittanceCell.querySelector('.remittance-link')) {
+                    // If there's already a remittance link, mark as remitted
+                    this.textContent = 'Remitted ✓';
+                    
+                    // Remove from payouts immediately
+                    console.log('Removing row from payouts table');
+                    row.remove();
+                    
+                    alert('Remittance recorded successfully and removed from list!');
+                } else {
+                    // If no remittance proof yet, prompt to upload first
+                    alert('Please upload proof of remittance first.');
+                }
+            }
+
+            // Call the setup function when the page loads
+            setupRemittedButtons();
 
             // Sorting functionality
             const sortableHeaders = document.querySelectorAll('th.sortable');

@@ -142,6 +142,25 @@
         .btn-export:hover {
             background-color: #45a049;
         }
+        .filter-select, .date-input {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 14px;
+        }
+        .advanced-sorting > div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .advanced-sorting label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .btn-filter:hover {
+            background-color: #007f67;
+        }
     </style>
 </head>
 <body>
@@ -152,12 +171,15 @@
                 <span class="menu-icon">☰</span>
                 <div class="menu-dropdown-content">
                     <a href="proposal-list.html">Proposals</a>
-                    <a href="collections.html" class="active">Collections</a>
+                    <a href="collections.html">Collections</a>
                     <a href="payouts.html">Payouts</a>
+                    <a href="sales-report.html" class="active">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
                     <a href="rejected.html">Rejected</a>
-                    <a href="sales-report.html">Sales Report</a>
-                    <a href="agent-registration.html">Register an Agent</a>
-                    <a href="customer-update.html">Customer Update</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
                 </div>
             </div>
         </div>
@@ -195,6 +217,67 @@
                 <option value="dec">December</option>
             </select>
             <button class="btn-export">Export as Excel</button>
+        </div>
+        
+        <!-- Additional sorting options -->
+        <div class="advanced-sorting" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <label for="sortByCollection">Collection Status:</label>
+                <select id="sortByCollection" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="collected">Collected</option>
+                    <option value="uncollected">Uncollected</option>
+                    <option value="both">Collected and Uncollected</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="sortByRemittance">Remittance Status:</label>
+                <select id="sortByRemittance" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="forRemittance">For Remittance</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="dateRange">Date Range:</label>
+                <input type="date" id="dateFrom" class="date-input" style="padding: 5px; margin-right: 5px;">
+                <span>to</span>
+                <input type="date" id="dateTo" class="date-input" style="padding: 5px; margin-left: 5px;">
+                <button id="applyDateFilter" class="btn-filter" style="margin-left: 5px; padding: 5px 10px; background-color: #009879; color: white; border: none; border-radius: 3px; cursor: pointer;">Apply</button>
+            </div>
+            
+            <div>
+                <label for="sortByTimeframe">Time Frame:</label>
+                <select id="sortByTimeframe" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="day">Per Day</option>
+                    <option value="week">Per Week</option>
+                    <option value="month">Per Month</option>
+                    <option value="year">Per Year</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="sortByCategory">Category:</label>
+                <select id="sortByCategory" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="agent">Per Agent</option>
+                    <option value="classification">Per Classification</option>
+                </select>
+            </div>
+            
+            <div id="classificationOptions" style="display: none;">
+                <label for="sortByClassificationType">Classification Type:</label>
+                <select id="sortByClassificationType" class="filter-select">
+                    <option value="all">All</option>
+                    <option value="brethren">BRETHREN</option>
+                    <option value="nonBrethren">NON-BRETHREN</option>
+                    <option value="brethrenAbroad">BRETHREN ABROAD</option>
+                    <option value="nonBrethrenAbroad">NON-BRETHREN ABROAD</option>
+                    <option value="company">COMPANY</option>
+                </select>
+            </div>
         </div>
         
         <div class="table-container">
@@ -392,13 +475,115 @@
                 // In a real implementation, this would generate and download an Excel file
             });
 
-            // Sorting functionality
+            // Show classification options when "Per Classification" is selected
+            const sortByCategorySelect = document.getElementById('sortByCategory');
+            const classificationOptions = document.getElementById('classificationOptions');
+            
+            sortByCategorySelect.addEventListener('change', function() {
+                if (this.value === 'classification') {
+                    classificationOptions.style.display = 'block';
+                } else {
+                    classificationOptions.style.display = 'none';
+                }
+            });
+            
+            // Apply filters when the filter selects change
+            const filterSelects = document.querySelectorAll('.filter-select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    applyFilters();
+                });
+            });
+            
+            // Apply date range filter
+            const applyDateFilterBtn = document.getElementById('applyDateFilter');
+            applyDateFilterBtn.addEventListener('click', function() {
+                applyFilters();
+            });
+            
+            // Function to apply all filters
+            function applyFilters() {
+                const collectionStatus = document.getElementById('sortByCollection').value;
+                const remittanceStatus = document.getElementById('sortByRemittance').value;
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+                const timeframe = document.getElementById('sortByTimeframe').value;
+                const category = document.getElementById('sortByCategory').value;
+                const classificationType = document.getElementById('sortByClassificationType').value;
+                
+                // For demonstration purposes, just show what filters would be applied
+                console.log('Applying filters:', {
+                    collectionStatus,
+                    remittanceStatus,
+                    dateFrom,
+                    dateTo,
+                    timeframe,
+                    category,
+                    classificationType
+                });
+                
+                alert('Filtering with selected options. In a production environment, this would filter the data accordingly.');
+                // In a real implementation, this would filter the table data based on the selected options
+            }
+            
+            // Original sorting functionality
             const sortableHeaders = document.querySelectorAll('th.sortable');
             sortableHeaders.forEach(header => {
                 header.addEventListener('click', function() {
                     const column = this.getAttribute('data-column');
-                    // Sort implementation would go here
-                    alert(`Sorting by ${column}`);
+                    
+                    // Implement basic sorting functionality
+                    const table = document.getElementById('salesReportTable');
+                    const rows = Array.from(table.querySelectorAll('tbody tr:not(.total-row)'));
+                    const totalRow = document.querySelector('.total-row');
+                    
+                    // Remove existing sort indicators
+                    document.querySelectorAll('.sort-icon').forEach(icon => {
+                        icon.textContent = '↕';
+                    });
+                    
+                    // Get current sort direction
+                    let sortDirection = this.getAttribute('data-sort') === 'asc' ? 'desc' : 'asc';
+                    this.setAttribute('data-sort', sortDirection);
+                    
+                    // Update sort indicator
+                    this.querySelector('.sort-icon').textContent = sortDirection === 'asc' ? '↑' : '↓';
+                    
+                    // Sort rows
+                    rows.sort((a, b) => {
+                        const aValue = a.querySelector(`td:nth-child(${Array.from(this.parentNode.children).indexOf(this) + 1})`).textContent;
+                        const bValue = b.querySelector(`td:nth-child(${Array.from(this.parentNode.children).indexOf(this) + 1})`).textContent;
+                        
+                        // Handle currency values
+                        if (aValue.startsWith('₱') && bValue.startsWith('₱')) {
+                            const aNum = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+                            const bNum = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+                            return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                        }
+                        
+                        // Handle dates
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(aValue) && /^\d{4}-\d{2}-\d{2}$/.test(bValue)) {
+                            const aDate = new Date(aValue);
+                            const bDate = new Date(bValue);
+                            return sortDirection === 'asc' ? aDate - bDate : bDate - aDate;
+                        }
+                        
+                        // Regular string comparison
+                        return sortDirection === 'asc' ? 
+                            aValue.localeCompare(bValue) : 
+                            bValue.localeCompare(aValue);
+                    });
+                    
+                    // Reorder table
+                    const tbody = table.querySelector('tbody');
+                    rows.forEach(row => {
+                        tbody.appendChild(row);
+                    });
+                    
+                    // Re-append total row at the end
+                    if (totalRow) {
+                        tbody.appendChild(totalRow);
+                    }
                 });
             });
 

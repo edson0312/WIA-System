@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - User Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        .form-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group.short {
+            flex: 0.3;
+            min-width: 100px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        .btn-save, .btn-cancel, .btn-edit, .btn-delete {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-save {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-edit {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-cancel {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html" class="active">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1 id="pageTitle">User Registration</h1>
+        </div>
+        
+        <div class="form-container">
+            <form id="userForm">
+                <input type="hidden" id="userCode" name="userCode" value="">
+                <!-- Row 1: Personal Information -->
+                <h3 class="section-title">Personal Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group short">
+                        <label for="middleInitial">M.I.</label>
+                        <input type="text" id="middleInitial" name="middleInitial" maxlength="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="form-group short">
+                        <label for="extName">Ext. Name</label>
+                        <input type="text" id="extName" name="extName" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                    </div>
+                </div>
+
+                <!-- Row 2: Address -->
+                <h3 class="section-title">Address</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="region">Region</label>
+                        <select id="region" name="region" required>
+                            <option value="" disabled selected>Select Region</option>
+                            <option value="NCR">National Capital Region (NCR)</option>
+                            <option value="CAR">Cordillera Administrative Region (CAR)</option>
+                            <option value="Region I">Region I (Ilocos Region)</option>
+                            <option value="Region II">Region II (Cagayan Valley)</option>
+                            <option value="Region III">Region III (Central Luzon)</option>
+                            <option value="Region IV-A">Region IV-A (CALABARZON)</option>
+                            <option value="Region IV-B">Region IV-B (MIMAROPA)</option>
+                            <option value="Region V">Region V (Bicol Region)</option>
+                            <option value="Region VI">Region VI (Western Visayas)</option>
+                            <option value="Region VII">Region VII (Central Visayas)</option>
+                            <option value="Region VIII">Region VIII (Eastern Visayas)</option>
+                            <option value="Region IX">Region IX (Zamboanga Peninsula)</option>
+                            <option value="Region X">Region X (Northern Mindanao)</option>
+                            <option value="Region XI">Region XI (Davao Region)</option>
+                            <option value="Region XII">Region XII (SOCCSKSARGEN)</option>
+                            <option value="Region XIII">Region XIII (Caraga)</option>
+                            <option value="BARMM">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="province">Province</label>
+                        <select id="province" name="province" required>
+                            <option value="" disabled selected>Select Province</option>
+                            <!-- Will be populated based on region -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City/Municipality</label>
+                        <select id="city" name="city" required>
+                            <option value="" disabled selected>Select City/Municipality</option>
+                            <!-- Will be populated based on province -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="barangay">Barangay</label>
+                        <select id="barangay" name="barangay" required>
+                            <option value="" disabled selected>Select Barangay</option>
+                            <!-- Will be populated based on city -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1 0 100%;">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="Street, Building, House No., etc." required>
+                    </div>
+                </div>
+
+                <!-- Row 3: Contact Information -->
+                <h3 class="section-title">Contact Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactNo">Contact No.</label>
+                        <input type="tel" id="contactNo" name="contactNo" placeholder="+639123456789" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="messenger">Messenger/FB</label>
+                        <input type="text" id="messenger" name="messenger" placeholder="FB Profile/Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="viber">Viber</label>
+                        <input type="tel" id="viber" name="viber" placeholder="+639123456789">
+                    </div>
+                </div>
+
+                <!-- Row 4: User Information -->
+                <h3 class="section-title">User Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Temporary Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">User Role</label>
+                        <select id="userRole" name="userRole" required>
+                            <option value="" disabled selected>Select Role</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Encoder">Encoder</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div id="newFormActions" class="form-actions">
+                    <button type="button" id="saveBtn" class="btn-save">Save</button>
+                    <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+                </div>
+                
+                <div id="viewFormActions" class="form-actions" style="display: none;">
+                    <button type="button" id="editBtn" class="btn-edit">Edit</button>
+                    <button type="button" id="deleteBtn" class="btn-delete">Delete</button>
+                    <button type="button" id="cancelViewBtn" class="btn-cancel">Cancel</button>
+                </div>
+                
+                <div id="editFormActions" class="form-actions" style="display: none;">
+                    <button type="button" id="saveEditBtn" class="btn-save">Save</button>
+                    <button type="button" id="cancelEditBtn" class="btn-cancel">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const userForm = document.getElementById('userForm');
+            const pageTitle = document.getElementById('pageTitle');
+            
+            // Action buttons
+            const saveBtn = document.getElementById('saveBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const editBtn = document.getElementById('editBtn');
+            const deleteBtn = document.getElementById('deleteBtn');
+            const cancelViewBtn = document.getElementById('cancelViewBtn');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            
+            // Action divs
+            const newFormActions = document.getElementById('newFormActions');
+            const viewFormActions = document.getElementById('viewFormActions');
+            const editFormActions = document.getElementById('editFormActions');
+            
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const userCode = urlParams.get('userCode');
+            const mode = urlParams.get('mode');
+
+            // Prepare test data for region, province, city dropdown population
+            const regions = {
+                'NCR': ['Metro Manila'],
+                'Region IV-A': ['Cavite', 'Laguna', 'Batangas', 'Rizal', 'Quezon']
+            };
+            
+            const provinces = {
+                'Metro Manila': ['Manila', 'Quezon City', 'Makati', 'Pasig', 'Taguig'],
+                'Cavite': ['Bacoor', 'Imus', 'Dasmariñas', 'Cavite City', 'Tagaytay'],
+                'Laguna': ['Santa Rosa', 'Calamba', 'San Pedro', 'Biñan', 'Los Baños']
+            };
+            
+            const cities = {
+                'Manila': ['Binondo', 'Ermita', 'Intramuros', 'Malate', 'Quiapo'],
+                'Quezon City': ['Diliman', 'Cubao', 'Fairview', 'Novaliches', 'Commonwealth'],
+                'Bacoor': ['Talaba', 'Molino', 'Panapaan', 'Queens Row', 'Bayanan']
+            };
+            
+            // Test user data
+            const testUsers = {
+                'USER001': {
+                    userCode: 'USER001',
+                    firstName: 'John',
+                    middleInitial: 'A',
+                    lastName: 'Doe',
+                    extName: '',
+                    dateOfBirth: '1990-05-15',
+                    region: 'NCR',
+                    province: 'Metro Manila',
+                    city: 'Quezon City',
+                    barangay: 'Diliman',
+                    address: '123 Main Street, Unit 5B',
+                    contactNo: '+639123456789',
+                    messenger: 'john.doe',
+                    viber: '+639123456789',
+                    username: 'johndoe',
+                    email: 'john.doe@example.com',
+                    password: '********',
+                    userRole: 'Accounting'
+                },
+                'USER002': {
+                    userCode: 'USER002',
+                    firstName: 'Maria',
+                    middleInitial: 'B',
+                    lastName: 'Santos',
+                    extName: '',
+                    dateOfBirth: '1988-10-20',
+                    region: 'Region IV-A',
+                    province: 'Cavite',
+                    city: 'Bacoor',
+                    barangay: 'Talaba',
+                    address: '456 Ocean View Street',
+                    contactNo: '+639987654321',
+                    messenger: 'maria.santos',
+                    viber: '+639987654321',
+                    username: 'mariasantos',
+                    email: 'maria.santos@example.com',
+                    password: '********',
+                    userRole: 'Sales'
+                },
+                'USER003': {
+                    userCode: 'USER003',
+                    firstName: 'Robert',
+                    middleInitial: 'C',
+                    lastName: 'Garcia',
+                    extName: 'Jr.',
+                    dateOfBirth: '1992-03-08',
+                    region: 'NCR',
+                    province: 'Metro Manila',
+                    city: 'Manila',
+                    barangay: 'Binondo',
+                    address: '789 Chinatown Road',
+                    contactNo: '+639567891234',
+                    messenger: 'robert.garcia',
+                    viber: '+639567891234',
+                    username: 'robertgarcia',
+                    email: 'robert.garcia@example.com',
+                    password: '********',
+                    userRole: 'Encoder'
+                }
+            };
+            
+            // Validation functions
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function validatePhoneNumber(phone) {
+                // Allow + and digits
+                const re = /^[+]?[0-9]+$/;
+                return re.test(phone);
+            }
+            
+            // Event handlers for input validation
+            document.getElementById('contactNo').addEventListener('input', function() {
+                const value = this.value;
+                if (value && !validatePhoneNumber(value)) {
+                    this.setCustomValidity('Please enter a valid phone number. Only numbers and + sign are allowed.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+            
+            document.getElementById('viber').addEventListener('input', function() {
+                const value = this.value;
+                if (value && !validatePhoneNumber(value)) {
+                    this.setCustomValidity('Please enter a valid Viber number. Only numbers and + sign are allowed.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+            
+            document.getElementById('email').addEventListener('input', function() {
+                const value = this.value;
+                if (value && !validateEmail(value)) {
+                    this.setCustomValidity('Please enter a valid email address.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+            
+            // Function to load user data
+            function loadUserData(userCode) {
+                // If test data exists for the user code
+                if (testUsers[userCode]) {
+                    const userData = testUsers[userCode];
+                    
+                    // Set form fields
+                    document.getElementById('userCode').value = userData.userCode;
+                    document.getElementById('firstName').value = userData.firstName;
+                    document.getElementById('middleInitial').value = userData.middleInitial;
+                    document.getElementById('lastName').value = userData.lastName;
+                    document.getElementById('extName').value = userData.extName;
+                    document.getElementById('dateOfBirth').value = userData.dateOfBirth;
+                    
+                    // Set address fields
+                    document.getElementById('region').value = userData.region;
+                    populateProvinces();
+                    document.getElementById('province').value = userData.province;
+                    populateCities();
+                    document.getElementById('city').value = userData.city;
+                    populateBarangays();
+                    document.getElementById('barangay').value = userData.barangay;
+                    document.getElementById('address').value = userData.address;
+                    
+                    // Set contact information
+                    document.getElementById('contactNo').value = userData.contactNo;
+                    document.getElementById('messenger').value = userData.messenger;
+                    document.getElementById('viber').value = userData.viber;
+                    
+                    // Set user information
+                    document.getElementById('username').value = userData.username;
+                    document.getElementById('email').value = userData.email;
+                    document.getElementById('password').value = userData.password;
+                    document.getElementById('userRole').value = userData.userRole;
+                    
+                    return true;
+                }
+                return false;
+            }
+            
+            // Load test data if in view or edit mode
+            if (mode === 'view' || mode === 'edit') {
+                if (userCode && loadUserData(userCode)) {
+                    // Update page title and form mode
+                    pageTitle.textContent = mode === 'view' ? 'View User' : 'Edit User';
+                    
+                    // Show appropriate action buttons
+                    newFormActions.style.display = 'none';
+                    if (mode === 'view') {
+                        viewFormActions.style.display = 'flex';
+                        // Disable all form fields in view mode
+                        Array.from(userForm.elements).forEach(element => {
+                            if (element.tagName !== 'BUTTON') {
+                                element.disabled = true;
+                            }
+                        });
+                    } else {
+                        editFormActions.style.display = 'flex';
+                    }
+                } else {
+                    alert('User not found!');
+                    window.location.href = 'user-list.html';
+                }
+            } else {
+                // If in new mode, set a default user code
+                document.getElementById('userCode').value = 'USER' + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                
+                // Load first test user data for demonstration in new mode
+                if (Object.keys(testUsers).length > 0) {
+                    loadUserData(Object.keys(testUsers)[0]);
+                }
+            }
+            
+            // Dropdown population functions
+            function populateProvinces() {
+                const region = document.getElementById('region').value;
+                const provinceSelect = document.getElementById('province');
+                provinceSelect.innerHTML = '<option value="" disabled selected>Select Province</option>';
+                
+                if (regions[region]) {
+                    regions[region].forEach(province => {
+                        const option = document.createElement('option');
+                        option.value = province;
+                        option.textContent = province;
+                        provinceSelect.appendChild(option);
+                    });
+                }
+            }
+            
+            function populateCities() {
+                const province = document.getElementById('province').value;
+                const citySelect = document.getElementById('city');
+                citySelect.innerHTML = '<option value="" disabled selected>Select City/Municipality</option>';
+                
+                if (provinces[province]) {
+                    provinces[province].forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        citySelect.appendChild(option);
+                    });
+                }
+            }
+            
+            function populateBarangays() {
+                const city = document.getElementById('city').value;
+                const barangaySelect = document.getElementById('barangay');
+                barangaySelect.innerHTML = '<option value="" disabled selected>Select Barangay</option>';
+                
+                if (cities[city]) {
+                    cities[city].forEach(barangay => {
+                        const option = document.createElement('option');
+                        option.value = barangay;
+                        option.textContent = barangay;
+                        barangaySelect.appendChild(option);
+                    });
+                }
+            }
+            
+            // Setup dropdown change events
+            document.getElementById('region').addEventListener('change', function() {
+                populateProvinces();
+            });
+            
+            document.getElementById('province').addEventListener('change', function() {
+                populateCities();
+            });
+            
+            document.getElementById('city').addEventListener('change', function() {
+                populateBarangays();
+            });
+            
+            // Initial population
+            populateProvinces();
+            
+            // Enable form fields for editing
+            function enableFormFields() {
+                const formElements = userForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    formElements[i].disabled = false;
+                }
+                // Keep userCode disabled
+                document.getElementById('userCode').disabled = true;
+            }
+            
+            // Cancel button handler
+            cancelBtn.addEventListener('click', function() {
+                if (window.parent && window.parent.location.pathname.includes('user-list.html')) {
+                    window.parent.postMessage('close_popup', '*');
+                } else {
+                    window.location.href = 'user-list.html';
+                }
+            });
+            
+            // Cancel View button handler
+            cancelViewBtn.addEventListener('click', function() {
+                if (window.parent && window.parent.location.pathname.includes('user-list.html')) {
+                    window.parent.postMessage('close_popup', '*');
+                } else {
+                    window.location.href = 'user-list.html';
+                }
+            });
+            
+            // Cancel Edit button handler
+            cancelEditBtn.addEventListener('click', function() {
+                // Switch back to view mode
+                viewFormActions.style.display = 'flex';
+                editFormActions.style.display = 'none';
+                
+                // Disable all form fields
+                const formElements = userForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    formElements[i].disabled = true;
+                }
+                
+                // Repopulate data
+                if (testUsers[userCode]) {
+                    const userData = testUsers[userCode];
+                    for (const key in userData) {
+                        if (document.getElementById(key)) {
+                            document.getElementById(key).value = userData[key];
+                        }
+                    }
+                }
+            });
+            
+            // Edit button handler
+            editBtn.addEventListener('click', function() {
+                // Switch to edit mode
+                viewFormActions.style.display = 'none';
+                editFormActions.style.display = 'flex';
+                
+                // Enable all form fields
+                enableFormFields();
+            });
+            
+            // Delete button handler
+            deleteBtn.addEventListener('click', function() {
+                if (confirm(`Are you sure you want to delete user ${userCode}?`)) {
+                    alert(`User ${userCode} has been deleted.`);
+                    
+                    // Notify parent window if in iframe
+                    if (window.parent && window.parent.location.pathname.includes('user-list.html')) {
+                        window.parent.postMessage('user_deleted', '*');
+                    } else {
+                        window.location.href = 'user-list.html';
+                    }
+                }
+            });
+            
+            // Save button handler (new user)
+            saveBtn.addEventListener('click', function() {
+                if (userForm.checkValidity()) {
+                    // Generate a new user code
+                    const newUserCode = 'USER' + String(Math.floor(Math.random() * 10000)).padStart(3, '0');
+                    
+                    alert(`User ${newUserCode} has been created successfully.`);
+                    window.location.href = 'user-list.html';
+                } else {
+                    userForm.reportValidity();
+                }
+            });
+            
+            // Save Edit button handler
+            saveEditBtn.addEventListener('click', function() {
+                if (userForm.checkValidity()) {
+                    alert(`User ${userCode} has been updated successfully.`);
+                    
+                    // Notify parent window if in iframe
+                    if (window.parent && window.parent.location.pathname.includes('user-list.html')) {
+                        window.parent.postMessage('user_updated', '*');
+                    } else {
+                        window.location.href = 'user-list.html';
+                    }
+                } else {
+                    userForm.reportValidity();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
