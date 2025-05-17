@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - Proposal List</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin: 5% auto;
+            background-color: white;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1010;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .policy-actions, .soa-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .policy-link, .soa-link {
+            text-decoration: none;
+            color: #0066cc;
+            margin-right: 5px;
+        }
+        .btn-edit-small, .btn-delete-small {
+            padding: 2px 5px;
+            font-size: 0.8em;
+            cursor: pointer;
+        }
+        .btn-edit-small {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+        .btn-delete-small {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+        .btn-create:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        /* New styles for upload and SOA popups */
+        .modal-form {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .form-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+            width: 400px;
+            display: none;
+        }
+        .form-popup h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        
+        /* Updated table styles to match Collections page */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        thead tr {
+            background-color: #009879;
+            color: white;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dddddd;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Rejection Modal */
+        #rejectModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .reject-modal-content {
+            position: relative;
+            width: 400px;
+            margin: 10% auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .reject-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html" class="active">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1>Proposals</h1>
+            <button id="newProposalBtn" class="btn-new" onclick="window.location.href='new-proposal.html'">New Proposal</button>
+        </div>
+        
+        <div class="table-container">
+            <table id="proposalsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="proposalCode">Proposal Code <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="lastName">Last Name <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="firstName">First Name <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="transactionType">Transaction Type <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="policyNo">Policy No. <span class="sort-icon">↕</span></th>
+                        <th class="sortable" data-column="soa">SOA <span class="sort-icon">↕</span></th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <button class="btn-edit-small edit-proposal-btn" data-proposal="MILESTONE-CVH-004">Edit</button>
+                            <a href="files/proposal/PROPOSAL (MILESTONE) CV-H (RENEWAL).pdf" class="proposal-link" data-pdf="files/proposal/PROPOSAL (MILESTONE) CV-H (RENEWAL).pdf">MILESTONE-CVH-004</a>
+                        </td>
+                        <td>Brown</td>
+                        <td>Patricia</td>
+                        <td>RENEWAL</td>
+                        <td><button class="btn-create upload-policy-btn" data-proposal="MILESTONE-CVH-004">Upload Policy</button></td>
+                        <td><button class="btn-create create-soa-btn" disabled data-proposal="MILESTONE-CVH-004">Create SOA</button></td>
+                        <td>
+                            <button class="btn-edit">Accept</button>
+                            <button class="btn-delete">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn-edit-small edit-proposal-btn" data-proposal="ALPHA-CV-001">Edit</button>
+                            <a href="files/proposal/PROPOSAL (ALPHA) - CV (RENEWAL).pdf" class="proposal-link" data-pdf="files/proposal/PROPOSAL (ALPHA) - CV (RENEWAL).pdf">ALPHA-CV-001</a>
+                        </td>
+                        <td>Smith</td>
+                        <td>John</td>
+                        <td>RENEWAL</td>
+                        <td>
+                            <a href="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - ALPHA (CV).pdf">POLICY SCHEDULE - ALPHA (CV)</a>
+                        </td>
+                        <td><button class="btn-create create-soa-btn" data-proposal="ALPHA-CV-001">Create SOA</button></td>
+                        <td>
+                            <button class="btn-edit accept-btn" disabled>Accept</button>
+                            <button class="btn-delete">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn-edit-small edit-proposal-btn" data-proposal="MILESTONE-PC-002">Edit</button>
+                            <a href="files/proposal/PROPOSAL (MILESTONE) - PC (RENEWAL).pdf" class="proposal-link" data-pdf="files/proposal/PROPOSAL (MILESTONE) - PC (RENEWAL).pdf">MILESTONE-PC-002</a>
+                            
+                        </td>
+                        <td>Johnson</td>
+                        <td>Emma</td>
+                        <td>RENEWAL</td>
+                        <td>
+                            <div class="policy-actions">
+                                <a href="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (PC).pdf">POLICY SCHEDULE - MILESTONE (PC)</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="soa-actions">
+                                <button class="btn-edit-small edit-soa-btn" data-proposal="MILESTONE-PC-002" data-soa="SOA (MILESTONE) - PC">Edit</button>
+                                <a href="files/soa/SOA (MILESTONE) - PC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - PC.pdf">SOA (MILESTONE) - PC</a>
+                             </div>
+                        </td>
+                        <td>
+                            <button class="btn-edit accept-btn">Accept</button>
+                            <button class="btn-delete">Reject</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn-edit-small edit-proposal-btn" data-proposal="MILESTONE-PC-002">Edit</button>
+                            <a href="files/proposal/PROPOSAL (MILESTONE) - MC (NEW).pdf" class="proposal-link" data-pdf="files/proposal/PROPOSAL (MILESTONE) - MC (NEW).pdf">MILESTONE-MC-003</a>
+                        </td>
+                        <td>Williams</td>
+                        <td>Robert</td>
+                        <td>NEW</td>
+                        <td>
+                            <div class="policy-actions">
+                                <a href="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf" class="policy-link" data-pdf="files/policy/POLICY SCHEDULE - MILESTONE (MC).pdf">POLICY SCHEDULE - MILESTONE (MC)</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="soa-actions">
+                                <button class="btn-edit-small edit-soa-btn" data-proposal="MILESTONE-MC-003" data-soa="SOA (MILESTONE) - MC">Edit</button>
+                                <a href="files/soa/SOA (MILESTONE) - MC.pdf" class="soa-link" data-pdf="files/soa/SOA (MILESTONE) - MC.pdf">SOA (MILESTONE) - MC</a>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn-edit accept-btn">Accept</button>
+                            <button class="btn-delete">Reject</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination">
+            <button class="btn-page">Previous</button>
+            <button class="btn-page active">1</button>
+            <button class="btn-page">2</button>
+            <button class="btn-page">3</button>
+            <button class="btn-page">Next</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Deletion</h2>
+            <p>Are you sure you want to delete this proposal?</p>
+            <div class="modal-buttons">
+                <button id="cancelDelete" class="btn-cancel">Cancel</button>
+                <button id="confirmDelete" class="btn-confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Popup -->
+    <div id="pdfPopup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Upload Policy Popup -->
+    <div id="uploadPolicyPopup" class="form-popup">
+        <h2>Upload Policy</h2>
+        <form id="uploadPolicyForm">
+            <input type="hidden" id="policyProposalCode" name="proposalCode">
+            <div class="form-group">
+                <label for="policyFileName">Name of the File (optional)</label>
+                <input type="text" id="policyFileName" name="fileName" placeholder="Leave blank to use the uploaded filename">
+            </div>
+            <div class="form-group">
+                <label for="policyFile">Select File</label>
+                <input type="file" id="policyFile" name="policyFile" accept=".pdf">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelPolicyUpload">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmPolicyUpload">Upload</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Create SOA Popup -->
+    <div id="createSoaPopup" class="form-popup">
+        <h2>Create SOA</h2>
+        <form id="createSoaForm">
+            <input type="hidden" id="soaProposalCode" name="proposalCode">
+            <div class="form-group">
+                <label for="startPaymentDate">Start of Payment Date</label>
+                <input type="date" id="startPaymentDate" name="startPaymentDate">
+            </div>
+            <div class="form-group">
+                <label for="installmentTerms">No. of Installment Terms</label>
+                <input type="number" id="installmentTerms" name="installmentTerms" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label for="paymentMode">Mode of Payment</label>
+                <select id="paymentMode" name="paymentMode">
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="PDC">PDC</option>
+                    <option value="Cash">Cash</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelSoaCreate">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmSoaCreate">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Edit SOA Popup -->
+    <div id="editSoaPopup" class="form-popup">
+        <h2>Edit SOA</h2>
+        <form id="editSoaForm">
+            <input type="hidden" id="editSoaProposalCode" name="proposalCode">
+            <input type="hidden" id="editSoaFileName" name="fileName">
+            <div class="form-group">
+                <label for="editStartPaymentDate">Start of Payment Date</label>
+                <input type="date" id="editStartPaymentDate" name="startPaymentDate">
+            </div>
+            <div class="form-group">
+                <label for="editInstallmentTerms">No. of Installment Terms</label>
+                <input type="number" id="editInstallmentTerms" name="installmentTerms" min="1" value="1">
+            </div>
+            <div class="form-group">
+                <label for="editPaymentMode">Mode of Payment</label>
+                <select id="editPaymentMode" name="paymentMode">
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="PDC">PDC</option>
+                    <option value="Cash">Cash</option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" id="cancelSoaEdit">Cancel</button>
+                <button type="button" class="btn-confirm" id="confirmSoaEdit">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Edit Proposal Popup -->
+    <div id="editProposalPopup" class="form-popup" style="width: 600px;">
+        <h2>Edit Proposal</h2>
+        <button type="button" class="popup-close" id="closeProposalEdit">&times;</button>
+        <iframe id="newProposalFrame" src="new-proposal.html" style="width: 100%; height: 500px; border: none;"></iframe>
+    </div>
+
+    <!-- Rejection Modal -->
+    <div id="rejectModal" class="modal">
+        <div class="reject-modal-content">
+            <span class="reject-modal-close">&times;</span>
+            <h2>Reject Proposal</h2>
+            <div class="form-group">
+                <label for="rejectReason">Reason for Rejection</label>
+                <select id="rejectReason" name="rejectReason" required>
+                    <option value="" disabled selected>Select rejection reason</option>
+                    <option value="Incomplete documentation">Incomplete documentation</option>
+                    <option value="Missing information">Missing information</option>
+                    <option value="High risk assessment">High risk assessment</option>
+                    <option value="Payment issues with previous policy">Payment issues with previous policy</option>
+                    <option value="Customer request">Customer request</option>
+                    <option value="Policy underwriting guidelines">Policy underwriting guidelines</option>
+                    <option value="Regulatory constraints">Regulatory constraints</option>
+                    <option value="Fraudulent information">Fraudulent information</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelReject" class="btn-cancel">Cancel</button>
+                <button id="confirmReject" class="btn-confirm">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/proposal-list.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for new proposal data in localStorage
+            const newProposalData = localStorage.getItem('newProposal');
+            if (newProposalData) {
+                try {
+                    const proposalData = JSON.parse(newProposalData);
+                    
+                    // Create a new row for the proposal
+                    const tbody = document.querySelector('#proposalsTable tbody');
+                    const newRow = document.createElement('tr');
+                    
+                    // Add the proposal data to the row
+                    newRow.innerHTML = `
+                        <td>
+                            <a href="files/proposal/PROPOSAL (ALPHA) - CV (RENEWAL).pdf" class="proposal-link" data-pdf="files/proposal/PROPOSAL (ALPHA) - CV (RENEWAL).pdf">${proposalData.proposalCode}</a>
+                            <button class="btn-edit-small edit-proposal-btn" data-proposal="${proposalData.proposalCode}">Edit</button>
+                        </td>
+                        <td>${proposalData.lastName}</td>
+                        <td>${proposalData.firstName}</td>
+                        <td>${proposalData.transactionType}</td>
+                        <td><button class="btn-create upload-policy-btn" data-proposal="${proposalData.proposalCode}">Upload Policy</button></td>
+                        <td><button class="btn-create create-soa-btn" disabled data-proposal="${proposalData.proposalCode}">Create SOA</button></td>
+                        <td>
+                            <button class="btn-edit accept-btn">Accept</button>
+                            <button class="btn-delete reject-btn">Reject</button>
+                        </td>
+                    `;
+                    
+                    // Add the new row to the top of the table
+                    if (tbody.firstChild) {
+                        tbody.insertBefore(newRow, tbody.firstChild);
+                    } else {
+                        tbody.appendChild(newRow);
+                    }
+                    
+                    // Setup PDF links for the new row
+                    setupPdfLinks(newRow.querySelectorAll('.proposal-link'));
+                    setupEditProposalButtons(newRow.querySelectorAll('.edit-proposal-btn'));
+                    
+                    // Clear the localStorage
+                    localStorage.removeItem('newProposal');
+                } catch (e) {
+                    console.error('Error parsing new proposal data:', e);
+                }
+            }
+            
+            // Popup functionality for proposal, policy, and SOA links
+            const proposalLinks = document.querySelectorAll('.proposal-link');
+            const policyLinks = document.querySelectorAll('.policy-link');
+            const soaLinks = document.querySelectorAll('.soa-link');
+            const popup = document.getElementById('pdfPopup');
+            const pdfFrame = document.getElementById('pdfFrame');
+            const closeBtn = document.querySelector('.popup-close');
+            
+            // Function to handle all PDF links
+            function setupPdfLinks(links) {
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const pdfPath = this.getAttribute('data-pdf');
+                        pdfFrame.src = pdfPath;
+                        popup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup all PDF links
+            setupPdfLinks(proposalLinks);
+            setupPdfLinks(policyLinks);
+            setupPdfLinks(soaLinks);
+            
+            // Close popup functionality
+            closeBtn.addEventListener('click', function() {
+                popup.style.display = 'none';
+                pdfFrame.src = '';
+            });
+            
+            popup.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = 'none';
+                    pdfFrame.src = '';
+                }
+            });
+
+            // Upload Policy functionality
+            const uploadPolicyBtns = document.querySelectorAll('.upload-policy-btn');
+            const uploadPolicyPopup = document.getElementById('uploadPolicyPopup');
+            const policyProposalCodeInput = document.getElementById('policyProposalCode');
+            const cancelPolicyUploadBtn = document.getElementById('cancelPolicyUpload');
+            const confirmPolicyUploadBtn = document.getElementById('confirmPolicyUpload');
+            const policyFileInput = document.getElementById('policyFile');
+            const policyFileNameInput = document.getElementById('policyFileName');
+
+            uploadPolicyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const proposalCode = this.getAttribute('data-proposal');
+                    policyProposalCodeInput.value = proposalCode;
+                    uploadPolicyPopup.style.display = 'block';
+                });
+            });
+
+            cancelPolicyUploadBtn.addEventListener('click', function() {
+                uploadPolicyPopup.style.display = 'none';
+                document.getElementById('uploadPolicyForm').reset();
+            });
+
+            confirmPolicyUploadBtn.addEventListener('click', function() {
+                const proposalCode = policyProposalCodeInput.value;
+                const fileInput = policyFileInput;
+                const fileName = policyFileNameInput.value.trim() || (fileInput.files.length > 0 ? fileInput.files[0].name : 'Policy Document');
+                
+                if (fileInput.files.length > 0) {
+                    // Find the button element in the table
+                    const btnElement = document.querySelector(`.upload-policy-btn[data-proposal="${proposalCode}"]`);
+                    if (btnElement) {
+                        const tdElement = btnElement.parentElement;
+                        tdElement.innerHTML = `
+                            <a href="#" class="policy-link" data-pdf="files/policy/${fileName}">${fileName}</a>
+                        `;
+                        
+                        // Setup PDF links for the new link
+                        setupPdfLinks(tdElement.querySelectorAll('.policy-link'));
+                        
+                        // Enable the Create SOA button if it was disabled
+                        const row = tdElement.parentElement;
+                        const soaBtn = row.querySelector('.create-soa-btn');
+                        if (soaBtn && soaBtn.disabled) {
+                            soaBtn.disabled = false;
+                        }
+                    }
+                    
+                    uploadPolicyPopup.style.display = 'none';
+                    document.getElementById('uploadPolicyForm').reset();
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+
+            // Create SOA functionality
+            const createSoaBtns = document.querySelectorAll('.create-soa-btn');
+            const createSoaPopup = document.getElementById('createSoaPopup');
+            const soaProposalCodeInput = document.getElementById('soaProposalCode');
+            const startPaymentDateInput = document.getElementById('startPaymentDate');
+            const cancelSoaCreateBtn = document.getElementById('cancelSoaCreate');
+            const confirmSoaCreateBtn = document.getElementById('confirmSoaCreate');
+
+            // Function to check and manage Accept buttons
+            function updateAcceptButtons() {
+                const rows = document.querySelectorAll('#proposalsTable tbody tr');
+                rows.forEach(row => {
+                    const soaCell = row.querySelector('td:nth-child(6)'); // SOA column
+                    const acceptBtn = row.querySelector('.accept-btn');
+                    
+                    if (!acceptBtn) return;
+                    
+                    // Disable Accept button if Create SOA button exists and is enabled
+                    const createSoaBtn = soaCell.querySelector('.create-soa-btn:not([disabled])');
+                    if (createSoaBtn) {
+                        acceptBtn.disabled = true;
+                    } else {
+                        acceptBtn.disabled = false;
+                    }
+                });
+            }
+
+            // Run initial check for Accept buttons
+            updateAcceptButtons();
+
+            // Set default date to today for start payment date
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            startPaymentDateInput.value = formattedDate;
+
+            createSoaBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!this.disabled) {
+                        const proposalCode = this.getAttribute('data-proposal');
+                        soaProposalCodeInput.value = proposalCode;
+                        createSoaPopup.style.display = 'block';
+                    }
+                });
+            });
+
+            cancelSoaCreateBtn.addEventListener('click', function() {
+                createSoaPopup.style.display = 'none';
+                document.getElementById('createSoaForm').reset();
+                startPaymentDateInput.value = formattedDate; // Reset to today
+            });
+
+            confirmSoaCreateBtn.addEventListener('click', function() {
+                const proposalCode = soaProposalCodeInput.value;
+                const soaFileName = `SOA (${proposalCode})`;
+                
+                // Find the button element in the table
+                const btnElement = document.querySelector(`.create-soa-btn[data-proposal="${proposalCode}"]`);
+                if (btnElement) {
+                    const tdElement = btnElement.parentElement;
+                    tdElement.innerHTML = `
+                        <div class="soa-actions">
+                            <a href="#" class="soa-link" data-pdf="files/soa/${soaFileName}.pdf">${soaFileName}</a>
+                            <button class="btn-edit-small edit-soa-btn" data-proposal="${proposalCode}" data-soa="${soaFileName}">Edit</button>
+                        </div>
+                    `;
+                    
+                    // Setup PDF links for the new link
+                    setupPdfLinks(tdElement.querySelectorAll('.soa-link'));
+                    
+                    // Setup edit button for the new SOA
+                    setupEditSoaButtons(tdElement.querySelectorAll('.edit-soa-btn'));
+                    
+                    // Update Accept buttons since SOA status changed
+                    updateAcceptButtons();
+                }
+                
+                createSoaPopup.style.display = 'none';
+                document.getElementById('createSoaForm').reset();
+                startPaymentDateInput.value = formattedDate; // Reset to today
+            });
+
+            // Edit SOA functionality
+            const editSoaPopup = document.getElementById('editSoaPopup');
+            const editSoaProposalCodeInput = document.getElementById('editSoaProposalCode');
+            const editSoaFileNameInput = document.getElementById('editSoaFileName');
+            const editStartPaymentDateInput = document.getElementById('editStartPaymentDate');
+            const cancelSoaEditBtn = document.getElementById('cancelSoaEdit');
+            const confirmSoaEditBtn = document.getElementById('confirmSoaEdit');
+
+            // Set default date to today for edit start payment date
+            editStartPaymentDateInput.value = formattedDate;
+
+            function setupEditSoaButtons(buttons) {
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const proposalCode = this.getAttribute('data-proposal');
+                        const soaName = this.getAttribute('data-soa');
+                        
+                        editSoaProposalCodeInput.value = proposalCode;
+                        editSoaFileNameInput.value = soaName;
+                        editStartPaymentDateInput.value = formattedDate; // Set to today as default
+                        
+                        editSoaPopup.style.display = 'block';
+                    });
+                });
+            }
+
+            // Setup initial edit SOA buttons
+            setupEditSoaButtons(document.querySelectorAll('.edit-soa-btn'));
+
+            cancelSoaEditBtn.addEventListener('click', function() {
+                editSoaPopup.style.display = 'none';
+                document.getElementById('editSoaForm').reset();
+                editStartPaymentDateInput.value = formattedDate; // Reset to today
+            });
+
+            confirmSoaEditBtn.addEventListener('click', function() {
+                const proposalCode = editSoaProposalCodeInput.value;
+                const soaFileName = editSoaFileNameInput.value;
+                
+                // Just close the popup as if changes were saved
+                // In a real application, you would update the SOA data in your backend
+                
+                editSoaPopup.style.display = 'none';
+                document.getElementById('editSoaForm').reset();
+                editStartPaymentDateInput.value = formattedDate; // Reset to today
+            });
+
+            // Edit Proposal functionality
+            const editProposalPopup = document.getElementById('editProposalPopup');
+            const closeProposalEditBtn = document.getElementById('closeProposalEdit');
+            
+            function setupEditProposalButtons(buttons) {
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const proposalCode = this.getAttribute('data-proposal');
+                        // You can pass the proposal code to the iframe if needed
+                        // For example: document.getElementById('newProposalFrame').src = `new-proposal.html?proposalCode=${proposalCode}`;
+                        editProposalPopup.style.display = 'block';
+                    });
+                });
+            }
+            
+            // Setup edit proposal buttons
+            setupEditProposalButtons(document.querySelectorAll('.edit-proposal-btn'));
+            
+            closeProposalEditBtn.addEventListener('click', function() {
+                editProposalPopup.style.display = 'none';
+            });
+            
+            // Listen for messages from the iframe for when form is submitted
+            window.addEventListener('message', function(event) {
+                if (event.data === 'proposal_saved') {
+                    editProposalPopup.style.display = 'none';
+                }
+            });
+            
+            // Reject functionality
+            const rejectBtns = document.querySelectorAll('.btn-delete');
+            const rejectModal = document.getElementById('rejectModal');
+            const cancelRejectBtn = document.getElementById('cancelReject');
+            const confirmRejectBtn = document.getElementById('confirmReject');
+            const rejectReasonSelect = document.getElementById('rejectReason');
+            const rejectModalClose = document.querySelector('.reject-modal-close');
+            let currentRejectRow = null;
+            
+            rejectBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Store the reference to the current row
+                    currentRejectRow = this.closest('tr');
+                    
+                    // Show the reject modal
+                    rejectModal.style.display = 'block';
+                    rejectReasonSelect.selectedIndex = 0;
+                });
+            });
+            
+            cancelRejectBtn.addEventListener('click', function() {
+                rejectModal.style.display = 'none';
+                currentRejectRow = null;
+            });
+            
+            rejectModalClose.addEventListener('click', function() {
+                rejectModal.style.display = 'none';
+                currentRejectRow = null;
+            });
+            
+            confirmRejectBtn.addEventListener('click', function() {
+                if (!rejectReasonSelect.value) {
+                    alert('Please select a reason for rejection');
+                    return;
+                }
+                
+                if (currentRejectRow) {
+                    // Get proposal information
+                    const proposalCode = currentRejectRow.querySelector('td:first-child a').textContent;
+                    const lastName = currentRejectRow.querySelector('td:nth-child(2)').textContent;
+                    const firstName = currentRejectRow.querySelector('td:nth-child(3)').textContent;
+                    const transactionType = currentRejectRow.querySelector('td:nth-child(4)').textContent;
+                    const rejectReason = rejectReasonSelect.value;
+                    
+                    // Get today's date formatted as YYYY-MM-DD
+                    const today = new Date();
+                    const rejectDate = today.toISOString().split('T')[0];
+                    
+                    // Store in localStorage to use in rejected.html
+                    const rejectedData = {
+                        proposalCode,
+                        lastName,
+                        firstName,
+                        transactionType,
+                        rejectReason,
+                        rejectDate,
+                        expiryDate: '2024-12-31' // Default expiry date, modify as needed
+                    };
+                    
+                    // Get existing rejected data or create new array
+                    const existingRejected = JSON.parse(localStorage.getItem('rejectedProposals') || '[]');
+                    existingRejected.push(rejectedData);
+                    localStorage.setItem('rejectedProposals', JSON.stringify(existingRejected));
+                    
+                    // Remove the row from the table
+                    currentRejectRow.remove();
+                    
+                    // Close the modal
+                    rejectModal.style.display = 'none';
+                    currentRejectRow = null;
+                }
+            });
+            
+            // Accept functionality
+            const acceptBtns = document.querySelectorAll('.accept-btn');
+            
+            acceptBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.disabled) return;
+                    
+                    const row = this.closest('tr');
+                    
+                    // Get data from the row
+                    const soaElement = row.querySelector('td:nth-child(6) .soa-link');
+                    if (!soaElement) {
+                        alert('Cannot accept proposal without an SOA document');
+                        return;
+                    }
+                    
+                    const soaText = soaElement.textContent;
+                    const policyElement = row.querySelector('td:nth-child(5) .policy-link');
+                    const policyText = policyElement ? policyElement.textContent : '';
+                    const firstName = row.querySelector('td:nth-child(3)').textContent;
+                    const lastName = row.querySelector('td:nth-child(2)').textContent;
+                    
+                    // Create collection data
+                    const collectionData = {
+                        soa: soaText,
+                        mv: '500,000', // Default MV, modify as needed
+                        amount: '₱25,000', // Default amount, modify as needed
+                        paymentTerms: '1/1', // Default payment terms, modify as needed
+                        modeOfPayment: 'Bank Transfer', // Default mode of payment
+                        dueDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0], // Due in 30 days
+                        dateIssued: new Date().toISOString().split('T')[0], // Today
+                        assured: `${lastName} ${firstName}`,
+                        policyNo: policyText,
+                        invNo: `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+                        inceptionDate: new Date().toISOString().split('T')[0], // Today
+                        expiryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0], // 1 year from today
+                        proofOfPayment: null
+                    };
+                    
+                    // Get existing collections data or create new array
+                    const existingCollections = JSON.parse(localStorage.getItem('collections') || '[]');
+                    existingCollections.push(collectionData);
+                    localStorage.setItem('collections', JSON.stringify(existingCollections));
+                    
+                    // Remove the row from the table
+                    row.remove();
+                    
+                    alert('Proposal accepted and moved to Collections');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

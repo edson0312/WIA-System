@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - Agent Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="stylesheet" href="css/new-proposal.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        .form-container {
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group.short {
+            flex: 0 0 80px;
+            min-width: 80px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[disabled], .form-group select[disabled], .form-group textarea[disabled] {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        .form-section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-action {
+            padding: 8px 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0055aa;
+        }
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        .brethren-fields {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1 id="pageTitle">Agent Registration</h1>
+        </div>
+        
+        <div class="form-container">
+            <form id="agentRegistrationForm">
+                <!-- Row 1: Agent Code and Name fields -->
+                <div class="form-row">
+                    <div class="form-group" style="flex: 0 0 150px;">
+                        <label for="agentCode">Agent Code</label>
+                        <input type="text" id="agentCode" name="agentCode" value="AG-005" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+                    </div>
+                    
+                    <div class="form-group short">
+                        <label for="middleInitial">MI</label>
+                        <input type="text" id="middleInitial" name="middleInitial" placeholder="MI" maxlength="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+                    </div>
+                    
+                    <div class="form-group short">
+                        <label for="extName">Ext. Name</label>
+                        <input type="text" id="extName" name="extName" placeholder="Ext." maxlength="5">
+                    </div>
+                </div>
+                
+                <!-- Row 2: GCash Account -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gcashName">GCash Account Name</label>
+                        <input type="text" id="gcashName" name="gcashName" placeholder="Enter GCash account name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gcashNo">GCash Account No.</label>
+                        <input type="text" id="gcashNo" name="gcashNo" placeholder="Enter GCash number" 
+                               pattern="[0-9]+" title="Only numeric digits are allowed" 
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+                
+                <!-- Row 3: Classification and Type -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="classification">Classification</label>
+                        <select id="classification" name="classification" required onchange="toggleBrethrenFields()">
+                            <option value="" disabled selected>Select classification</option>
+                            <option value="Brethren">Brethren</option>
+                            <option value="Non-Brethren">Non-Brethren</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="agentType">Type</label>
+                        <select id="agentType" name="agentType" required>
+                            <option value="" disabled selected>Select agent type</option>
+                            <option value="Locale">Locale</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Freelance">Freelance</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Row 4: Brethren Fields (conditionally shown) -->
+                <div id="brethrenFields" class="brethren-fields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="region">Region</label>
+                            <select id="region" name="region" onchange="loadProvinces()">
+                                <option value="" disabled selected>Select a region</option>
+                                <option value="NCR">National Capital Region (NCR)</option>
+                                <option value="CAR">Cordillera Administrative Region (CAR)</option>
+                                <option value="REGION1">Region I (Ilocos Region)</option>
+                                <option value="REGION2">Region II (Cagayan Valley)</option>
+                                <option value="REGION3">Region III (Central Luzon)</option>
+                                <option value="REGION4A">Region IV-A (CALABARZON)</option>
+                                <option value="REGION4B">Region IV-B (MIMAROPA)</option>
+                                <option value="REGION5">Region V (Bicol Region)</option>
+                                <option value="REGION6">Region VI (Western Visayas)</option>
+                                <option value="REGION7">Region VII (Central Visayas)</option>
+                                <option value="REGION8">Region VIII (Eastern Visayas)</option>
+                                <option value="REGION9">Region IX (Zamboanga Peninsula)</option>
+                                <option value="REGION10">Region X (Northern Mindanao)</option>
+                                <option value="REGION11">Region XI (Davao Region)</option>
+                                <option value="REGION12">Region XII (SOCCSKSARGEN)</option>
+                                <option value="CARAGA">Region XIII (CARAGA)</option>
+                                <option value="BARMM">Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="province">District/Province</label>
+                            <select id="province" name="province" onchange="loadCities()">
+                                <option value="" disabled selected>Select a province</option>
+                                <!-- Provinces will be loaded dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <select id="city" name="city">
+                                <option value="" disabled selected>Select a city</option>
+                                <!-- Cities will be loaded dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="locale">Locale</label>
+                            <input type="text" id="locale" name="locale" placeholder="Enter locale">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Action Buttons -->
+                <div class="form-actions" id="normalActions">
+                    <button type="button" id="saveBtn" class="btn-action btn-primary">Save</button>
+                    <button type="button" id="cancelBtn" class="btn-action btn-primary">Cancel</button>
+                </div>
+                
+                <!-- View Mode Action Buttons (hidden by default) -->
+                <div class="form-actions" id="viewActions" style="display: none;">
+                    <button type="button" id="editBtn" class="btn-action btn-primary">Edit</button>
+                    <button type="button" id="deleteBtn" class="btn-action btn-primary">Delete</button>
+                    <button type="button" id="viewCancelBtn" class="btn-action btn-primary">Cancel</button>
+                </div>
+                
+                <!-- Edit Mode Action Buttons (hidden by default) -->
+                <div class="form-actions" id="editActions" style="display: none;">
+                    <button type="button" id="updateBtn" class="btn-action btn-primary">Save</button>
+                    <button type="button" id="editCancelBtn" class="btn-action btn-primary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mapping of regions to provinces
+        const regionProvinceMap = {
+            'NCR': ['Metro Manila'],
+            'CAR': ['Abra', 'Apayao', 'Benguet', 'Ifugao', 'Kalinga', 'Mountain Province'],
+            'REGION1': ['Ilocos Norte', 'Ilocos Sur', 'La Union', 'Pangasinan'],
+            'REGION2': ['Batanes', 'Cagayan', 'Isabela', 'Nueva Vizcaya', 'Quirino'],
+            'REGION3': ['Aurora', 'Bataan', 'Bulacan', 'Nueva Ecija', 'Pampanga', 'Tarlac', 'Zambales'],
+            'REGION4A': ['Batangas', 'Cavite', 'Laguna', 'Quezon', 'Rizal'],
+            'REGION4B': ['Marinduque', 'Occidental Mindoro', 'Oriental Mindoro', 'Palawan', 'Romblon'],
+            'REGION5': ['Albay', 'Camarines Norte', 'Camarines Sur', 'Catanduanes', 'Masbate', 'Sorsogon'],
+            'REGION6': ['Aklan', 'Antique', 'Capiz', 'Guimaras', 'Iloilo', 'Negros Occidental'],
+            'REGION7': ['Bohol', 'Cebu', 'Negros Oriental', 'Siquijor'],
+            'REGION8': ['Biliran', 'Eastern Samar', 'Leyte', 'Northern Samar', 'Samar', 'Southern Leyte'],
+            'REGION9': ['Zamboanga del Norte', 'Zamboanga del Sur', 'Zamboanga Sibugay'],
+            'REGION10': ['Bukidnon', 'Camiguin', 'Lanao del Norte', 'Misamis Occidental', 'Misamis Oriental'],
+            'REGION11': ['Davao de Oro', 'Davao del Norte', 'Davao del Sur', 'Davao Oriental', 'Davao Occidental'],
+            'REGION12': ['Cotabato', 'Sarangani', 'South Cotabato', 'Sultan Kudarat'],
+            'CARAGA': ['Agusan del Norte', 'Agusan del Sur', 'Dinagat Islands', 'Surigao del Norte', 'Surigao del Sur'],
+            'BARMM': ['Basilan', 'Lanao del Sur', 'Maguindanao', 'Sulu', 'Tawi-Tawi']
+        };
+        
+        // Sample mapping of provinces to cities (not complete, just examples)
+        const provinceCityMap = {
+            'Metro Manila': ['Manila', 'Quezon City', 'Makati', 'Pasig', 'Taguig', 'Pasay', 'Parañaque', 'Caloocan', 'Marikina', 'Mandaluyong', 'San Juan', 'Valenzuela', 'Navotas', 'Malabon', 'Muntinlupa', 'Las Piñas', 'Pateros'],
+            'Cebu': ['Cebu City', 'Mandaue', 'Lapu-Lapu', 'Talisay', 'Danao', 'Toledo', 'Bogo', 'Carcar', 'Naga'],
+            'Davao del Sur': ['Davao City', 'Digos', 'Santa Cruz', 'Bansalan', 'Matanao', 'Malalag', 'Padada', 'Sulop', 'Hagonoy'],
+            'Laguna': ['Santa Rosa', 'Calamba', 'San Pablo', 'Biñan', 'Cabuyao', 'Los Baños', 'San Pedro', 'Alaminos', 'Bay', 'Calauan'],
+            'Cavite': ['Bacoor', 'Cavite City', 'Dasmariñas', 'General Trias', 'Imus', 'Tagaytay', 'Trece Martires', 'Alfonso', 'Amadeo', 'Carmona']
+        };
+        
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const agentCode = urlParams.get('agentCode');
+        const mode = urlParams.get('mode');
+        
+        // Check if we're in view mode
+        if (mode === 'view' && agentCode) {
+            document.getElementById('pageTitle').textContent = 'Agent Details';
+            document.getElementById('normalActions').style.display = 'none';
+            document.getElementById('viewActions').style.display = 'flex';
+            
+            // Disable all form fields
+            disableAllFields(true);
+            
+            // Load agent data (this would come from a database in a real app)
+            loadAgentData(agentCode);
+        }
+        
+        // Function to load provinces based on selected region
+        function loadProvinces() {
+            const region = document.getElementById('region').value;
+            const provinceSelect = document.getElementById('province');
+            
+            // Clear previous options
+            provinceSelect.innerHTML = '<option value="" disabled selected>Select a province</option>';
+            
+            // Reset city dropdown
+            document.getElementById('city').innerHTML = '<option value="" disabled selected>Select a city</option>';
+            
+            if (region && regionProvinceMap[region]) {
+                regionProvinceMap[region].forEach(province => {
+                    const option = document.createElement('option');
+                    option.value = province;
+                    option.textContent = province;
+                    provinceSelect.appendChild(option);
+                });
+            }
+        }
+        
+        // Function to load cities based on selected province
+        function loadCities() {
+            const province = document.getElementById('province').value;
+            const citySelect = document.getElementById('city');
+            
+            // Clear previous options
+            citySelect.innerHTML = '<option value="" disabled selected>Select a city</option>';
+            
+            if (province && provinceCityMap[province]) {
+                provinceCityMap[province].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        }
+        
+        // Function to toggle Brethren fields
+        function toggleBrethrenFields() {
+            const classification = document.getElementById('classification').value;
+            const brethrenFields = document.getElementById('brethrenFields');
+            
+            if (classification === 'Brethren') {
+                brethrenFields.style.display = 'block';
+            } else {
+                brethrenFields.style.display = 'none';
+            }
+        }
+        
+        // Function to disable or enable all form fields
+        function disableAllFields(disable) {
+            const inputs = document.querySelectorAll('input:not([id="agentCode"])');
+            const selects = document.querySelectorAll('select');
+            
+            inputs.forEach(input => {
+                input.disabled = disable;
+            });
+            
+            selects.forEach(select => {
+                select.disabled = disable;
+            });
+        }
+        
+        // Function to load agent data (simulated for demo)
+        function loadAgentData(agentCode) {
+            // In a real app, this would fetch data from a server
+            // For demo, we'll use a sample agent based on the agent code
+            
+            let agentData;
+            switch(agentCode) {
+                case 'AG001':
+                    agentData = {
+                        agentCode: 'AG001',
+                        firstName: 'John',
+                        middleInitial: 'A',
+                        lastName: 'Smith',
+                        extName: 'Jr.',
+                        gcashName: 'John A. Smith',
+                        gcashNo: '09123456789',
+                        classification: 'Brethren',
+                        agentType: 'Regular',
+                        region: 'NCR',
+                        province: 'Metro Manila',
+                        city: 'Quezon City',
+                        locale: 'Commonwealth'
+                    };
+                    break;
+                case 'AG002':
+                    agentData = {
+                        agentCode: 'AG002',
+                        firstName: 'Maria',
+                        middleInitial: 'B',
+                        lastName: 'Santos',
+                        extName: '',
+                        gcashName: 'Maria Santos',
+                        gcashNo: '09987654321',
+                        classification: 'Brethren',
+                        agentType: 'Locale',
+                        region: 'REGION7',
+                        province: 'Cebu',
+                        city: 'Cebu City',
+                        locale: 'Lahug'
+                    };
+                    break;
+                case 'AG003':
+                    agentData = {
+                        agentCode: 'AG003',
+                        firstName: 'Robert',
+                        middleInitial: 'C',
+                        lastName: 'Dela Cruz',
+                        extName: '',
+                        gcashName: 'Robert Dela Cruz',
+                        gcashNo: '09567891234',
+                        classification: 'Non-Brethren',
+                        agentType: 'Freelance',
+                        region: '',
+                        province: '',
+                        city: '',
+                        locale: ''
+                    };
+                    break;
+                default:
+                    agentData = {
+                        agentCode: agentCode,
+                        firstName: '',
+                        middleInitial: '',
+                        lastName: '',
+                        extName: '',
+                        gcashName: '',
+                        gcashNo: '',
+                        classification: '',
+                        agentType: '',
+                        region: '',
+                        province: '',
+                        city: '',
+                        locale: ''
+                    };
+            }
+            
+            // Populate the form with agent data
+            document.getElementById('agentCode').value = agentData.agentCode;
+            document.getElementById('firstName').value = agentData.firstName;
+            document.getElementById('middleInitial').value = agentData.middleInitial;
+            document.getElementById('lastName').value = agentData.lastName;
+            document.getElementById('extName').value = agentData.extName;
+            document.getElementById('gcashName').value = agentData.gcashName;
+            document.getElementById('gcashNo').value = agentData.gcashNo;
+            
+            const classificationSelect = document.getElementById('classification');
+            classificationSelect.value = agentData.classification;
+            
+            const agentTypeSelect = document.getElementById('agentType');
+            agentTypeSelect.value = agentData.agentType;
+            
+            // Handle Brethren fields
+            if (agentData.classification === 'Brethren') {
+                document.getElementById('brethrenFields').style.display = 'block';
+                
+                const regionSelect = document.getElementById('region');
+                regionSelect.value = agentData.region;
+                
+                // Load provinces for the selected region
+                loadProvinces();
+                
+                // Select the province (need to set a timeout to ensure provinces are loaded)
+                setTimeout(() => {
+                    const provinceSelect = document.getElementById('province');
+                    provinceSelect.value = agentData.province;
+                    
+                    // Load cities for the selected province
+                    loadCities();
+                    
+                    // Select the city (need to set a timeout to ensure cities are loaded)
+                    setTimeout(() => {
+                        const citySelect = document.getElementById('city');
+                        citySelect.value = agentData.city;
+                        
+                        document.getElementById('locale').value = agentData.locale;
+                    }, 100);
+                }, 100);
+            }
+        }
+        
+        // Event listener for save button
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            // Validate form
+            const form = document.getElementById('agentRegistrationForm');
+            if (form.checkValidity()) {
+                alert('Agent registered successfully!');
+                // Here you would typically send the data to a server
+                // For demo purposes, just redirect back to agents list
+                window.location.href = 'agent-list.html';
+            } else {
+                // Trigger HTML5 validation
+                form.reportValidity();
+            }
+        });
+        
+        // Event listener for cancel button
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                window.location.href = 'agent-list.html';
+            }
+        });
+        
+        // Event listener for edit button in view mode
+        document.getElementById('editBtn').addEventListener('click', function() {
+            // Switch to edit mode
+            document.getElementById('pageTitle').textContent = 'Edit Agent';
+            document.getElementById('viewActions').style.display = 'none';
+            document.getElementById('editActions').style.display = 'flex';
+            
+            // Enable all form fields except agent code
+            disableAllFields(false);
+            document.getElementById('agentCode').disabled = true;
+        });
+        
+        // Event listener for delete button in view mode
+        document.getElementById('deleteBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this agent?')) {
+                alert('Agent deleted successfully!');
+                // In a real app, you would send a delete request to the server
+                
+                // For demo, notify the parent window and close
+                if (window.parent !== window) {
+                    window.parent.postMessage('agent_deleted', '*');
+                } else {
+                    window.location.href = 'agent-list.html';
+                }
+            }
+        });
+        
+        // Event listener for cancel button in view mode
+        document.getElementById('viewCancelBtn').addEventListener('click', function() {
+            // In iframe mode, we notify the parent window to close the popup
+            if (window.parent !== window) {
+                window.parent.postMessage('close_popup', '*');
+            } else {
+                window.location.href = 'agent-list.html';
+            }
+        });
+        
+        // Event listener for save button in edit mode
+        document.getElementById('updateBtn').addEventListener('click', function() {
+            // Validate form
+            const form = document.getElementById('agentRegistrationForm');
+            if (form.checkValidity()) {
+                alert('Agent updated successfully!');
+                // Here you would typically send the updated data to a server
+                
+                // For demo, notify the parent window and close
+                if (window.parent !== window) {
+                    window.parent.postMessage('agent_updated', '*');
+                } else {
+                    window.location.href = 'agent-list.html';
+                }
+            } else {
+                // Trigger HTML5 validation
+                form.reportValidity();
+            }
+        });
+        
+        // Event listener for cancel button in edit mode
+        document.getElementById('editCancelBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                // Return to view mode
+                document.getElementById('pageTitle').textContent = 'Agent Details';
+                document.getElementById('editActions').style.display = 'none';
+                document.getElementById('viewActions').style.display = 'flex';
+                
+                // Disable all form fields
+                disableAllFields(true);
+                
+                // Reload agent data
+                loadAgentData(agentCode);
+            }
+        });
+        
+        // Listen for messages from parent window (when in iframe)
+        window.addEventListener('message', function(event) {
+            if (event.data === 'close_popup') {
+                // Handle close request from parent
+                if (window.parent !== window) {
+                    window.parent.postMessage('close_popup', '*');
+                }
+            }
+        });
+        
+        // Add example data when the page loads in normal mode (not view/edit mode)
+        if (!mode) {
+            document.getElementById('firstName').value = 'John';
+            document.getElementById('middleInitial').value = 'D';
+            document.getElementById('lastName').value = 'Garcia';
+            document.getElementById('gcashName').value = 'John D. Garcia';
+            document.getElementById('gcashNo').value = '09123456789';
+            document.getElementById('classification').value = 'Brethren';
+            document.getElementById('agentType').value = 'Regular';
+            
+            // Show Brethren fields
+            toggleBrethrenFields();
+            
+            // Set example values for Brethren fields
+            document.getElementById('region').value = 'NCR';
+            loadProvinces();
+            
+            setTimeout(() => {
+                document.getElementById('province').value = 'Metro Manila';
+                loadCities();
+                
+                setTimeout(() => {
+                    document.getElementById('city').value = 'Quezon City';
+                    document.getElementById('locale').value = 'Commonwealth';
+                }, 100);
+            }, 100);
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIA - New Proposal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/proposal-list.css">
+    <link rel="stylesheet" href="css/new-proposal.css">
+    <link rel="icon" href="img/LOGO.png" type="image/png">
+    <style>
+        /* Menu Dropdown Styles */
+        .menu-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        .menu-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            padding: 5px;
+        }
+        .menu-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .menu-dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .menu-dropdown:hover .menu-dropdown-content {
+            display: block;
+        }
+        .menu-dropdown-content a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="img/LOGO-Horizontal.png" alt="WIA Logo" class="header-logo">
+            <div class="menu-dropdown">
+                <span class="menu-icon">☰</span>
+                <div class="menu-dropdown-content">
+                    <a href="proposal-list.html">Proposals</a>
+                    <a href="collections.html">Collections</a>
+                    <a href="payouts.html">Payouts</a>
+                    <a href="sales-report.html">Sales Report</a>
+                    <a href="remittance-provider.html">Remittance to Provider</a>
+                    <a href="rejected.html">Rejected</a>
+                    <a href="user-list.html">User</a>
+                    <a href="agent-list.html">Agent</a>
+                    <a href="customer-list.html">Customer</a>
+                    <a href="provider-list.html">Provider</a>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <span class="username">John Doe</span>
+                <div class="dropdown-content">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="index.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="title-container">
+            <h1>New Proposal</h1>
+        </div>
+        
+        <div class="form-container">
+            <form id="newProposalForm">
+                <!-- Row 1: Date and Proposal Code -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="text" id="date" name="date" value="05/15/2024" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="proposalCode">Proposal Code</label>
+                        <input type="text" id="proposalCode" name="proposalCode" value="MILESTONE-PC-005" disabled>
+                    </div>
+                </div>
+                <!-- Row 2: Name Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerId">Customer ID</label>
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="customerId" name="customerId" placeholder="Enter customer ID">
+                            <button type="button" id="customerSearchBtn" class="btn-action" style="padding: 4px 10px; height: 32px; margin-top: 1px;">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="Michael" required>
+                    </div>
+                    
+                    <div class="form-group" style="max-width: 80px;">
+                        <label for="middleInitial">M.I.</label>
+                        <input type="text" id="middleInitial" name="middleInitial" value="J" maxlength="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" value="Anderson" required>
+                    </div>
+                    
+                    <div class="form-group" style="max-width: 100px;">
+                        <label for="extName">Ext. Name</label>
+                        <input type="text" id="extName" name="extName" value="Jr." maxlength="5">
+                    </div>
+                </div>
+                <!-- Row 3: Code, Transaction Type, Vehicle Type -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type</label>
+                        <select id="transactionType" name="transactionType" required>
+                            <option value="" disabled>Select transaction type</option>
+                            <option value="New">New</option>
+                            <option value="Renewal" selected>Renewal</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vehicleType">Type of Vehicle</label>
+                        <select id="vehicleType" name="vehicleType" required>
+                            <option value="" disabled>Select vehicle type</option>
+                            <option value="PC" selected>PC - PRIVATE CARS</option>
+                            <option value="CV">CV - COMMERCIAL VEHICLE</option>
+                            <option value="CVFB">CVFB - COMMERCIAL VEHICLE / FB BODY</option>
+                            <option value="CV-L">CV-L - LIGHT TRUCKS</option>
+                            <option value="CV-H">CV-H - HEAVY TRUCKS</option>
+                            <option value="TNVS">TNVS - TRANSPORT NETWORK VEHICLE SERVICE</option>
+                            <option value="MC">MC - MOTORCYCLE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="agentCode">Agent Code</label>
+                        <input type="text" id="agentCode" name="agentCode" value="AG-001" disabled>
+                    </div>
+                </div>
+                <!-- Row 4: Address -->
+                <div class="form-row">
+                    <div class="form-group wide">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" value="123 Main Street, Metro Manila, Philippines 1000" required>
+                    </div>
+                </div>
+                
+                <!-- Row 5: Vehicle Information and Insurance -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="plateNo">Plate No.</label>
+                        <input type="text" id="plateNo" name="plateNo" value="ABC 1234" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="yearModel">Year Model/Maker</label>
+                        <input type="text" id="yearModel" name="yearModel" value="2023 Toyota Camry" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prevPolicyNo">Previous Policy No.</label>
+                        <input type="text" id="prevPolicyNo" name="prevPolicyNo" value="POL-2023-12345">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="insuranceProvider">Insurance Policy Provider</label>
+                        <select id="insuranceProvider" name="insuranceProvider" required>
+                            <option value="" disabled>Select provider</option>
+                            <option value="AISCIA" selected>AISCIA</option>
+                            <option value="MG">MG</option>
+                            <option value="MGAC">MGAC</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Row 6: Cover Period and Mortgagee -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="coverFrom">Cover Period From</label>
+                        <input type="text" id="coverFrom" name="coverFrom" value="05/15/2024" required>
+                        
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="3">Previous Policy</th>
+                                </tr>
+                                <tr>
+                                    <th>Current Market Value (2024)</th>
+                                    <th>Premium</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="currentMarketValue" name="currentMarketValue" value="1,250,000.00" inputmode="numeric" onkeyup="calculatePercentage(); updateOdAndAon();" onchange="calculatePercentage(); updateOdAndAon();"/></td>
+                                    <td><input type="text" id="premium" name="premium" value="18,750.00" inputmode="numeric" onkeyup="calculatePercentage()" onchange="calculatePercentage()"/></td>
+                                    <td><input type="text" id="percentage" name="percentage" value="1.50%" disabled/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="coverTo">Cover Period To</label>
+                        <input type="text" id="coverTo" name="coverTo" value="05/15/2025" disabled>
+                    </div>
+                    
+                    <div class="form-group wide-2">
+                        <label for="mortgagee">Mortgagee</label>
+                        <input type="text" id="mortgagee" name="mortgagee" value="BDO Unibank, Inc.">
+                        
+                        <table class="premium-table new-policy-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="3">New Policy</th>
+                                </tr>
+                                <tr>
+                                    <th>% OD/TH</th>
+                                    <th>% AON</th>
+                                    <th>New Market Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" id="odThPercentage" name="odThPercentage" value="1.00%" class="new-percentage" style="color: red; text-align: center;" inputmode="decimal" onkeyup="validateNumericInput(this); calculateNewMarketValue();" onchange="validateNumericInput(this); calculateNewMarketValue();"/></td>
+                                    <td><input type="text" id="aonPercentage" name="aonPercentage" value="0.50%" class="new-percentage" style="color: red; text-align: center;" inputmode="decimal" onkeyup="validateNumericInput(this); calculateNewMarketValue();" onchange="validateNumericInput(this); calculateNewMarketValue();"/></td>
+                                    <td><input type="text" id="newMarketValue" name="newMarketValue" value="14,116.50" style="text-align: right;" disabled/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Add Coverage Table -->
+                <div class="form-row">
+                    <div class="form-group" style="width: 50%;">
+                        <table class="coverage-table">
+                            <thead>
+                                <tr>
+                                    <th width="60%">Coverage</th>
+                                    <th width="20%">Limit</th>
+                                    <th width="20%">Premium</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Own Damage / Theft - (OD/TH)</td>
+                                    <td class="disable-cell"><span id="odThLimit" class="amount">987,750.00</span></td>
+                                    <td class="disable-cell"><span id="odThPremium" class="premium">10,077.50</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Acts of Nature (AON)</td>
+                                    <td class="disable-cell"><span id="aonLimit" class="amount">987,750.00</span></td>
+                                    <td class="disable-cell"><span id="aonPremium" class="premium">3,259.58</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Voluntary Third Party Liability - Bodily Injury - (VTPL-BI)</td>
+                                    <td><input type="text" class="input-field number-input" id="vtplBiLimit" value="200,000.00" style="color: blue; font-weight: bold; text-align: right; background-color: #e6f0ff;" inputmode="numeric" oninput="validateNumberInput(this); updateVtplPdLimit();"></td>
+                                    <td><input type="text" class="input-field number-input" value="510.00" style="color: #d00; font-weight: bold; text-align: right; background-color: #e6f0ff;" inputmode="numeric" oninput="validateNumberInput(this)"></td>
+                                </tr>
+                                <tr>
+                                    <td>Voluntary Third Party Liability - Property Damage - (VTPL-PD)</td>
+                                    <td class="disable-cell"><span id="vtplPdLimit" class="amount">200,000.00</span></td>
+                                    <td><input type="text" class="input-field number-input" value="1,320.00" style="color: #d00; font-weight: bold; text-align: right; background-color: #e6f0ff;" inputmode="numeric" oninput="validateNumberInput(this)"></td>
+                                </tr>
+                                <tr>
+                                    <td>Auto Personal Accident (20,000/passenger – Max. of <input type="number" id="maxPassengers" style="color:red; width: 70px; border: 1px solid #ccc; text-align: center;" value="5" oninput="updateApaValues();">)</td>
+                                    <td class="disable-cell"><span id="apaLimit" class="amount">100,000.00</span></td>
+                                    <td class="disable-cell"><span id="apaPremium" class="premium">250.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="small-text">with Medical Reimbursement of 10% of aggregate or individual coverage of P50K</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; color: blue; font-weight: bold;">Road Side Assistance</td>
+                                    <td colspan="2" style="text-align: center; color: blue; font-weight: bold;">Included</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; font-weight: bold;">Basic Premium</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span id="basicPremium" class="premium-bold">15,417.08</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">Documentary Stamps</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span id="documentaryStamps" class="premium">1,927.13</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">Value Added Tax (VAT)</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span id="vat" class="premium">1,850.05</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">Local Government Tax</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span id="localGovTax" class="premium">16.96</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center;">Road Side Assistance</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span class="premium">150.00</span></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td style="text-align: center; font-weight: bold;">Total Premium including taxes</td>
+                                    <td></td>
+                                    <td class="disable-cell"><span id="totalPremium" class="premium-total">19,361.22</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Add Remittance Table -->
+                    <div class="form-group" style="width: 50%;">
+                        <table class="remittance-table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">% Prem</th>
+                                    <th>Previous Policy</th>
+                                    <th colspan="2" class="yellow-bg">Remittance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="red-text">1.00%</td>
+                                    <td></td>
+                                    <td class="right-align">14,116.50</td>
+                                    <td class="right-align">0.80%</td>
+                                    <td class="right-align">7,902.00</td>
+                                </tr>
+                                <tr>
+                                    <td class="red-text">0.33%</td>
+                                    <td></td>
+                                    <td class="right-align">0.00</td>
+                                    <td class="right-align">0.30%</td>
+                                    <td class="right-align">2,963.25</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"></td>
+                                    <td></td>
+                                    <td class="right-align">510.00</td>
+                                    <td class="red-text">BI/PD/PA</td>
+                                    <td class="right-align">2,080.00</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="right-align">1,320.00</td>
+                                    <td class="blue-text">Basic Total</td>
+                                    <td class="right-align blue-text">12,945.25</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="right-align">0.00</td>
+                                    <td class="right-align">24.61%</td>
+                                    <td class="right-align">3,185.83</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-text">Basic Total</td>
+                                    <td></td>
+                                    <td class="right-align">15,946.50</td>
+                                    <td class="right-align">Less Com</td>
+                                    <td class="right-align">561.60</td>
+                                </tr>
+                                <tr>
+                                    <td>Taxes</td>
+                                    <td></td>
+                                    <td class="right-align">3,924.43</td>
+                                    <td class="right-align">RSA</td>
+                                    <td class="right-align">150.00</td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="bold-text">Total Prem</td>
+                                    <td></td>
+                                    <td class="right-align bold-text">19,870.93</td>
+                                    <td class="yellow-bg bold-text">Total Remittance</td>
+                                    <td class="right-align yellow-bg bold-text">15,719.48</td>
+                                </tr>
+                                <tr>
+                                    <td class="red-text">BI/PD/PA</td>
+                                    <td></td>
+                                    <td class="right-align">2,080.00</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Gross Profit</td>
+                                </tr>
+                                <tr>
+                                    <td>30%</td>
+                                    <td class="yellow-marker">→</td>
+                                    <td class="right-align">624.00</td>
+                                    <td colspan="2" class="center-text gray-bg">3,441.74</td>
+                                </tr>
+                                <tr>
+                                    <td>10%</td>
+                                    <td class="yellow-marker">→</td>
+                                    <td class="right-align">62.40</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Agent</td>
+                                </tr>
+                                <tr>
+                                    <td>Net com</td>
+                                    <td></td>
+                                    <td class="right-align">561.60</td>
+                                    <td colspan="2" class="center-text">IH</td>
+                                </tr>
+                                <tr class="yellow-bg">
+                                    <td class="bold-text">Total Premium :</td>
+                                    <td></td>
+                                    <td class="right-align bold-text">19,361.22</td>
+                                    <td>Net Com</td>
+                                    <td class="right-align">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="center-text bold-text">Payment Terms</td>
+                                    <td colspan="2" class="black-bg white-text center-text">Net Profit</td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">6 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱3,226.87</td>
+                                    <td colspan="2" class="center-text gray-bg">3,441.74</td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">5 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱3,872.24</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">4 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱4,840.30</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">3 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱6,453.74</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td class="center-text">2 Installment terms</td>
+                                    <td colspan="2" class="right-align">₱9,680.61</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <style>
+                    .full-width {
+                        width: 100%;
+                    }
+                    .premium-table {
+                        margin-top: 10px;
+                        width: 200%;
+                        border-collapse: collapse;
+                        text-align: center;
+                    }
+                    .premium-table th {
+                        background-color: #f0c000;
+                        border: 1px solid #000;
+                        padding: 4px;
+                    }
+                    .premium-table td {
+                        border: 1px solid #000;
+                        padding: 4px;
+                    }
+                    .new-policy-table {
+                        margin-top: 10px;
+                        width: 100%;
+                    }
+                    .new-policy-table th {
+                        background-color: #ffff00;
+                        border: 1px solid #000;
+                        padding: 4px;
+                    }
+                    .new-percentage {
+                        font-weight: bold;
+                    }
+                    .coverage-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                    }
+                    .coverage-table th, .coverage-table td {
+                        border: 1px solid black;
+                        padding: 8px;
+                    }
+                    .coverage-table th {
+                        background-color: white;
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                    .amount {
+                        color: blue;
+                        font-weight: bold;
+                        text-align: right;
+                    }
+                    .premium {
+                        text-align: right;
+                        color: #d00;
+                        font-weight: bold;
+                    }
+                    .premium-bold {
+                        text-align: right;
+                        color: #d00;
+                        font-weight: bold;
+                    }
+                    .premium-total {
+                        text-align: right;
+                        color: #d00;
+                        font-weight: bold;
+                    }
+                    .small-text {
+                        font-size: 0.9em;
+                        font-style: italic;
+                    }
+                    .total-row {
+                        border-top: 2px solid black;
+                    }
+                    #currentMarketValue {
+                        text-align: right;
+                    }
+                    #premium {
+                        text-align: right;
+                    }
+                    #percentage {
+                        text-align: right;
+                    }
+                    .disable-text {
+                        color: red;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                    .enable-text {
+                        color: red;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                    .input-field {
+                        width: 95%;
+                        padding: 4px;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        box-sizing: border-box;
+                    }
+                    .disable-cell {
+                        position: relative;
+                    }
+                    .disable-cell {
+                        color: red;
+                        font-weight: bold;
+                    }
+                    .disable-cell span {
+                        display: block;
+                        margin-top: 5px;
+                    }
+                    .form-actions {
+                        margin-top: 20px;
+                        display: flex;
+                        justify-content: flex-end;
+                    }
+                    .button-container {
+                        display: flex;
+                        gap: 10px;
+                    }
+                    .btn-action {
+                        padding: 8px 20px;
+                        border-radius: 4px;
+                        border: 1px solid #ccc;
+                        cursor: pointer;
+                        font-weight: bold;
+                    }
+                    .btn-primary {
+                        background-color: #0066cc;
+                        color: white;
+                        border-color: #0055aa;
+                    }
+                    .btn-secondary {
+                        background-color: #f0f0f0;
+                        color: #333;
+                    }
+                    /* New remittance table styles */
+                    .remittance-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                    }
+                    .remittance-table th, .remittance-table td {
+                        border: 1px solid black;
+                        padding: 4px 8px;
+                    }
+                    .remittance-table th {
+                        background-color: white;
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                    .right-align {
+                        text-align: right;
+                    }
+                    .center-text {
+                        text-align: center;
+                    }
+                    .red-text {
+                        color: red;
+                        font-weight: bold;
+                    }
+                    .blue-text {
+                        color: blue;
+                        font-weight: bold;
+                    }
+                    .bold-text {
+                        font-weight: bold;
+                    }
+                    .yellow-bg {
+                        background-color: yellow;
+                    }
+                    .black-bg {
+                        background-color: black;
+                    }
+                    .gray-bg {
+                        background-color: #e0e0e0;
+                    }
+                    .white-text {
+                        color: white;
+                    }
+                    .yellow-marker {
+                        color: orange;
+                        font-weight: bold;
+                    }
+                    .border-bottom {
+                        border-bottom: 2px solid black;
+                    }
+                </style>
+                
+                <!-- Form Action Buttons -->
+                <div class="form-actions">
+                    <div class="button-container">
+                        <button type="button" id="previewBtn" class="btn-action  btn-primary" >Preview</button>
+                        <button type="button" id="saveProposalBtn" class="btn-action btn-primary">Save</button>
+                        <button type="button" id="cancelBtn" class="btn-action btn-primary">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PDF Popup -->
+    <div id="pdfPopup" class="popup-overlay">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <iframe id="pdfFrame" class="popup-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Customer Search Popup -->
+    <div id="customerSearchPopup" class="popup-overlay">
+        <div class="popup-content" style="width: 70%; height: 70%;">
+            <span class="popup-close" id="closeCustomerSearch">&times;</span>
+            <div style="padding: 20px;">
+                <h2>Customer Search</h2>
+                
+                <div class="search-filters" style="margin-bottom: 20px;">
+                    <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                        <label>
+                            <input type="radio" name="searchType" value="customerId" checked> Customer ID
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="firstName"> First Name
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="lastName"> Last Name
+                        </label>
+                        <label>
+                            <input type="radio" name="searchType" value="agentName"> Agent Name
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="searchKeyword" style="flex: 1; padding: 8px;" placeholder="Enter search keyword">
+                        <button type="button" class="btn-action btn-primary" style="padding: 8px 15px;">Search</button>
+                    </div>
+                </div>
+                
+                <div class="search-results" style="margin-top: 20px; max-height: 300px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background-color: #009879; color: white;">
+                                <th style="padding: 12px 15px; text-align: center;">Select</th>
+                                <th style="padding: 12px 15px;">Customer ID</th>
+                                <th style="padding: 12px 15px;">First Name</th>
+                                <th style="padding: 12px 15px;">Middle Initial</th>
+                                <th style="padding: 12px 15px;">Last Name</th>
+                                <th style="padding: 12px 15px;">Ext. Name</th>
+                                <th style="padding: 12px 15px;">Code</th>
+                                <th style="padding: 12px 15px;">Agent Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #dddddd;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C001"></td>
+                                <td style="padding: 12px 15px;">C001</td>
+                                <td style="padding: 12px 15px;">John</td>
+                                <td style="padding: 12px 15px;">A</td>
+                                <td style="padding: 12px 15px;">Smith</td>
+                                <td style="padding: 12px 15px;">Jr.</td>
+                                <td style="padding: 12px 15px;">IH</td>
+                                <td style="padding: 12px 15px;">AG-001</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dddddd; background-color: #f3f3f3;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C002"></td>
+                                <td style="padding: 12px 15px;">C002</td>
+                                <td style="padding: 12px 15px;">Maria</td>
+                                <td style="padding: 12px 15px;">B</td>
+                                <td style="padding: 12px 15px;">Johnson</td>
+                                <td style="padding: 12px 15px;"></td>
+                                <td style="padding: 12px 15px;">A-B</td>
+                                <td style="padding: 12px 15px;">AG-002</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #dddddd;">
+                                <td style="padding: 12px 15px; text-align: center;"><input type="radio" name="selectedCustomer" value="C003"></td>
+                                <td style="padding: 12px 15px;">C003</td>
+                                <td style="padding: 12px 15px;">Robert</td>
+                                <td style="padding: 12px 15px;">C</td>
+                                <td style="padding: 12px 15px;">Williams</td>
+                                <td style="padding: 12px 15px;">III</td>
+                                <td style="padding: 12px 15px;">A-NB</td>
+                                <td style="padding: 12px 15px;">AG-003</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="cancelCustomerSearch" class="btn-action btn-primary">Cancel</button>
+                    <button type="button" id="selectCustomer" class="btn-action btn-primary">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/new-proposal.js"></script>
+    <script>
+        // Initialize all functions when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Existing percentage calculation
+            calculatePercentage();
+            // New market value calculation
+            calculateNewMarketValue();
+            // Initialize the OD/TH and AON calculations
+            updateOdAndAon();
+            // Initialize APA values based on passengers
+            updateApaValues();
+            // Format the cover date
+            formatCoverDate();
+            
+            // Add blur event to all number inputs for formatting
+            document.querySelectorAll('.number-input').forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    formatCurrency(this);
+                    calculateBasicPremium();
+                });
+            });
+            
+            // Add event listeners to OD/TH and AON percentage inputs
+            document.getElementById('odThPercentage').addEventListener('change', calculatePremiums);
+            document.getElementById('aonPercentage').addEventListener('change', calculatePremiums);
+        });
+        
+        // Function to calculate percentage
+        function calculatePercentage() {
+            let cmvStr = document.getElementById('currentMarketValue').value;
+            let premiumStr = document.getElementById('premium').value;
+            
+            // Remove commas and other non-numeric characters except decimal point
+            let cmv = parseFloat(cmvStr.replace(/[^\d.-]/g, ''));
+            let premium = parseFloat(premiumStr.replace(/[^\d.-]/g, ''));
+            
+            if (!isNaN(cmv) && !isNaN(premium) && cmv !== 0) {
+                // Calculate percentage (premium ÷ current market value) × 100
+                let percentage = (premium / cmv) * 100;
+                // Format to 2 decimal places and add % symbol
+                document.getElementById('percentage').value = percentage.toFixed(2) + '%';
+            } else {
+                document.getElementById('percentage').value = '0.00%';
+            }
+        }
+        
+        // Format cover date to mm/dd/yyyy
+        function formatCoverDate() {
+            const coverFrom = document.getElementById('coverFrom');
+            if (coverFrom.type === 'date') {
+                // If it's a date input, get the value and format it
+                const dateValue = coverFrom.value;
+                if (dateValue) {
+                    const date = new Date(dateValue);
+                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const day = date.getDate().toString().padStart(2, '0');
+                    const year = date.getFullYear();
+                    
+                    // Change the input type and set formatted value
+                    coverFrom.type = 'text';
+                    coverFrom.value = `${month}/${day}/${year}`;
+                }
+            }
+        }
+        
+        // Update OD/TH and AON limits based on Current Market Value × 0.9
+        function updateOdAndAon() {
+            const cmvStr = document.getElementById('currentMarketValue').value;
+            const cmv = parseFloat(cmvStr.replace(/[^\d.-]/g, ''));
+            
+            if (!isNaN(cmv)) {
+                const adjustedValue = cmv * 0.9;
+                
+                // Update OD/TH and AON limits
+                document.getElementById('odThLimit').textContent = adjustedValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('aonLimit').textContent = adjustedValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Recalculate premiums based on the new limits
+                calculatePremiums();
+            }
+        }
+        
+        // Calculate all premiums based on the specified formulas
+        function calculatePremiums() {
+            // Get OD/TH and AON limits
+            const odThLimitStr = document.getElementById('odThLimit').textContent;
+            const aonLimitStr = document.getElementById('aonLimit').textContent;
+            
+            // Get percentages from the New Policy table
+            const odThPercentageStr = document.getElementById('odThPercentage').value;
+            const aonPercentageStr = document.getElementById('aonPercentage').value;
+            
+            // Parse values
+            const odThLimit = parseFloat(odThLimitStr.replace(/[^\d.-]/g, ''));
+            const aonLimit = parseFloat(aonLimitStr.replace(/[^\d.-]/g, ''));
+            const odThPercentage = parseFloat(odThPercentageStr.replace(/[^\d.-]/g, '')) / 100;
+            const aonPercentage = parseFloat(aonPercentageStr.replace(/[^\d.-]/g, '')) / 100;
+            
+            // Calculate OD/TH Premium (Limit × % OD/TH + 200)
+            const odThPremium = odThLimit * odThPercentage + 200;
+            
+            // Calculate AON Premium (Limit × % AON)
+            const aonPremium = aonLimit * aonPercentage;
+            
+            // Update premium displays
+            document.getElementById('odThPremium').textContent = odThPremium.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('aonPremium').textContent = aonPremium.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // Calculate Basic Premium (sum of all premiums)
+            calculateBasicPremium();
+        }
+        
+        // Calculate Basic Premium and dependent values
+        function calculateBasicPremium() {
+            // Get premium values
+            const odThPremiumStr = document.getElementById('odThPremium').textContent;
+            const aonPremiumStr = document.getElementById('aonPremium').textContent;
+            const vtplBiPremiumStr = document.querySelector('tr:nth-child(3) td:nth-child(3) input').value;
+            const vtplPdPremiumStr = document.querySelector('tr:nth-child(4) td:nth-child(3) input').value;
+            const apaPremiumStr = document.getElementById('apaPremium').textContent;
+            
+            // Parse values
+            const odThPremium = parseFloat(odThPremiumStr.replace(/[^\d.-]/g, ''));
+            const aonPremium = parseFloat(aonPremiumStr.replace(/[^\d.-]/g, ''));
+            const vtplBiPremium = parseFloat(vtplBiPremiumStr.replace(/[^\d.-]/g, ''));
+            const vtplPdPremium = parseFloat(vtplPdPremiumStr.replace(/[^\d.-]/g, ''));
+            const apaPremium = parseFloat(apaPremiumStr.replace(/[^\d.-]/g, ''));
+            
+            // Calculate Basic Premium (sum of all premiums)
+            const basicPremium = odThPremium + aonPremium + vtplBiPremium + vtplPdPremium + apaPremium;
+            
+            // Calculate Documentary Stamps (Basic Premium × 12.5%)
+            const documentaryStamps = basicPremium * 0.125;
+            
+            // Calculate VAT (Basic Premium × 12%)
+            const vat = basicPremium * 0.12;
+            
+            // Calculate Local Government Tax (Basic Premium × 0.11%)
+            const localGovTax = basicPremium * 0.0011;
+            
+            // Get Road Side Assistance fee
+            const roadSideAssistanceStr = document.querySelector('tr:nth-child(11) td:nth-child(3) span').textContent;
+            const roadSideAssistance = parseFloat(roadSideAssistanceStr.replace(/[^\d.-]/g, ''));
+            
+            // Calculate Total Premium (sum of all components)
+            const totalPremium = basicPremium + documentaryStamps + vat + localGovTax + roadSideAssistance;
+            
+            // Update displays
+            document.getElementById('basicPremium').textContent = basicPremium.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('documentaryStamps').textContent = documentaryStamps.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('vat').textContent = vat.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('localGovTax').textContent = localGovTax.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('totalPremium').textContent = totalPremium.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        
+        // Update VTPL-PD limit to match VTPL-BI limit
+        function updateVtplPdLimit() {
+            const vtplBiLimitStr = document.getElementById('vtplBiLimit').value;
+            const vtplBiLimit = parseFloat(vtplBiLimitStr.replace(/[^\d.-]/g, ''));
+            
+            if (!isNaN(vtplBiLimit)) {
+                document.getElementById('vtplPdLimit').textContent = vtplBiLimit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Recalculate all premiums when VTPL-BI limit changes
+                calculateBasicPremium();
+            }
+        }
+        
+        // Function to validate numeric input with decimal point
+        function validateNumberInput(input) {
+            // Remove any non-numeric characters except decimal point
+            let value = input.value.replace(/[^\d.]/g, '');
+            
+            // Ensure only one decimal point
+            let parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            input.value = value;
+            
+            // Recalculate premiums when any premium field changes
+            calculateBasicPremium();
+        }
+        
+        // Update Auto Personal Accident values based on passenger count
+        function updateApaValues() {
+            const perPassengerAmount = 20000;
+            const perPassengerPremium = 50;
+            const passengers = parseInt(document.getElementById('maxPassengers').value) || 5;
+            
+            // Calculate total limit (20,000 × passenger count)
+            const totalLimit = perPassengerAmount * passengers;
+            // Calculate premium (50 × passenger count)
+            const totalPremium = perPassengerPremium * passengers;
+            
+            // Update the display
+            document.getElementById('apaLimit').textContent = totalLimit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('apaPremium').textContent = totalPremium.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // Recalculate basic premium when APA values change
+            calculateBasicPremium();
+        }
+        
+        // Format number inputs with commas when focus is lost
+        document.getElementById('currentMarketValue').addEventListener('blur', function() {
+            let value = this.value.replace(/[^\d.-]/g, '');
+            let num = parseFloat(value);
+            if (!isNaN(num)) {
+                this.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        });
+        
+        document.getElementById('premium').addEventListener('blur', function() {
+            let value = this.value.replace(/[^\d.-]/g, '');
+            let num = parseFloat(value);
+            if (!isNaN(num)) {
+                this.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        });
+        
+        // Auto Personal Accident field calculations
+        document.getElementById('apaLimit').addEventListener('blur', function() {
+            formatCurrency(this);
+        });
+        
+        document.getElementById('apaPremium').addEventListener('blur', function() {
+            formatCurrency(this);
+        });
+        
+        function formatCurrency(input) {
+            let value = input.value.replace(/[^\d.-]/g, '');
+            let num = parseFloat(value);
+            if (!isNaN(num)) {
+                input.value = num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        }
+        
+        // Validate and format all number input fields
+        function validateNumericInput(input) {
+            // Remove any non-numeric characters except decimal point
+            let value = input.value.replace(/[^\d.]/g, '');
+            
+            // Ensure only one decimal point
+            let parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            // Format as percentage with 2 decimal places
+            if (value !== '') {
+                let numValue = parseFloat(value);
+                if (!isNaN(numValue)) {
+                    input.value = numValue.toFixed(2) + '%';
+                } else {
+                    input.value = '0.00%';
+                }
+            } else {
+                input.value = '0.00%';
+            }
+        }
+        
+        // Add function to calculate New Market Value based on percentages
+        function calculateNewMarketValue() {
+            let currentMarketValue = parseFloat(document.getElementById('currentMarketValue').value.replace(/[^\d.-]/g, ''));
+            
+            // Get percentages
+            let odThPercentage = parseFloat(document.getElementById('odThPercentage').value.replace(/[^\d.-]/g, '')) / 100;
+            let aonPercentage = parseFloat(document.getElementById('aonPercentage').value.replace(/[^\d.-]/g, '')) / 100;
+            
+            if (!isNaN(odThPercentage) && !isNaN(aonPercentage) && !isNaN(currentMarketValue)) {
+                // Calculate new market value using the formula: Current Market Value × 0.9 × percentage (1.5%)
+                let totalPercentage = odThPercentage + aonPercentage;
+                let newValue = currentMarketValue * 0.9 * (parseFloat(document.getElementById('percentage').value.replace(/[^\d.-]/g, '')) / 100);
+                document.getElementById('newMarketValue').value = newValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+        }
+        
+        // Setup button event handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preview button functionality
+            document.getElementById('previewBtn').addEventListener('click', function() {
+                const popup = document.getElementById('pdfPopup');
+                const pdfFrame = document.getElementById('pdfFrame');
+                
+                // Set the PDF source
+                pdfFrame.src = "files/proposal/PROPOSAL (ALPHA) - CV (RENEWAL).pdf";
+                
+                // Show the popup
+                popup.style.display = 'block';
+            });
+            
+            // Close popup functionality
+            document.querySelector('.popup-close').addEventListener('click', function() {
+                const popup = document.getElementById('pdfPopup');
+                const pdfFrame = document.getElementById('pdfFrame');
+                
+                popup.style.display = 'none';
+                pdfFrame.src = '';
+            });
+            
+            document.getElementById('pdfPopup').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    document.getElementById('pdfFrame').src = '';
+                }
+            });
+            
+            // Save button functionality
+            document.getElementById('saveProposalBtn').addEventListener('click', function() {
+                // Get form data
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const transactionType = document.getElementById('transactionType').value;
+                
+                // Prepare data for proposal list
+                const proposalData = {
+                    proposalCode: 'ALPHA-CV-002',
+                    lastName: lastName,
+                    firstName: firstName,
+                    transactionType: transactionType,
+                    needsPolicy: true,
+                    needsSOA: true
+                };
+                
+                // Store the data in localStorage for demonstration
+                localStorage.setItem('newProposal', JSON.stringify(proposalData));
+                
+                // Redirect to proposal list
+                window.location.href = 'proposal-list.html';
+            });
+            
+            // Cancel button functionality
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                // Confirm before canceling
+                if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                    window.location.href = 'proposal-list.html';
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Customer Search Popup
+            const customerSearchBtn = document.getElementById('customerSearchBtn');
+            const customerSearchPopup = document.getElementById('customerSearchPopup');
+            const closeCustomerSearch = document.getElementById('closeCustomerSearch');
+            const cancelCustomerSearch = document.getElementById('cancelCustomerSearch');
+            const selectCustomer = document.getElementById('selectCustomer');
+            
+            // Show popup when search button is clicked
+            customerSearchBtn.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'block';
+            });
+            
+            // Close popup when close button is clicked
+            closeCustomerSearch.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'none';
+            });
+            
+            // Close popup when cancel button is clicked
+            cancelCustomerSearch.addEventListener('click', function() {
+                customerSearchPopup.style.display = 'none';
+            });
+            
+            // Handle customer selection
+            selectCustomer.addEventListener('click', function() {
+                const selectedCustomer = document.querySelector('input[name="selectedCustomer"]:checked');
+                
+                if (selectedCustomer) {
+                    const row = selectedCustomer.closest('tr');
+                    
+                    // Get customer data from the selected row
+                    const customerId = row.querySelector('td:nth-child(2)').textContent;
+                    const firstName = row.querySelector('td:nth-child(3)').textContent;
+                    const middleInitial = row.querySelector('td:nth-child(4)').textContent;
+                    const lastName = row.querySelector('td:nth-child(5)').textContent;
+                    const extName = row.querySelector('td:nth-child(6)').textContent;
+                    const code = row.querySelector('td:nth-child(7)').textContent;
+                    const agentCode = row.querySelector('td:nth-child(8)').textContent;
+                    
+                    // Populate form fields with the selected customer data
+                    document.getElementById('customerId').value = customerId;
+                    document.getElementById('firstName').value = firstName;
+                    document.getElementById('middleInitial').value = middleInitial;
+                    document.getElementById('lastName').value = lastName;
+                    document.getElementById('extName').value = extName;
+                    
+                    // Set the code dropdown to match the customer's code
+                    const codeSelect = document.getElementById('code');
+                    for (let i = 0; i < codeSelect.options.length; i++) {
+                        if (codeSelect.options[i].value === code) {
+                            codeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    // Set agent code
+                    document.getElementById('agentCode').value = agentCode;
+                    
+                    // Close the popup
+                    customerSearchPopup.style.display = 'none';
+                } else {
+                    alert('Please select a customer');
+                }
+            });
+            
+            // Allow clicking outside the popup to close it
+            customerSearchPopup.addEventListener('click', function(e) {
+                if (e.target === customerSearchPopup) {
+                    customerSearchPopup.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        /* Popup styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        .popup-content {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            margin: 5% auto;
+            background-color: white;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1010;
+        }
+        .popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</body>
+</html> 
